@@ -1,6 +1,14 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@transport-platform/design-tokens": ["../../packages/design-tokens/src/index.ts"],
+      "@transport-platform/observability": ["../../packages/observability/src/index.ts"],
+      "@transport-platform/test-utils": ["../../packages/test-utils/src/index.ts"],
+      "@transport-platform/ui-native": ["../../packages/ui-native/src/index.tsx"],
+      "@transport-platform/supabase/native": ["../../packages/supabase/src/native.ts"]
+    }
   }
 }
