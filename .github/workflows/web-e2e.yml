@@ -46,8 +46,8 @@ jobs:
       - name: Install Playwright Chromium Browser
         run: pnpm exec playwright install --with-deps chromium
 
-      - name: Build Web Application
-        run: pnpm --filter web build
+      - name: Build Workspace Packages & Applications
+        run: pnpm build
 
       - name: Run Playwright E2E & Axe Accessibility Smoke Tests
         run: pnpm test:e2e
