@@ -1,0 +1,2 @@
+-- Seed file for local Supabase development.
+-- Sprint 0: Empty seed file. Operational seeds will be added in subsequent feature sprints.

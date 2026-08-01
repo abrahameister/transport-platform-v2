@@ -1,0 +1,9 @@
+appId: com.transportplatform.driver.dev
+---
+- launchApp
+- assertVisible: 'Today'
+- assertVisible: 'Driver foundation — flujo operacional se implementará en un sprint posterior.'
+- tapOn: 'Activity'
+- assertVisible: 'Historial de Actividad'
+- tapOn: 'Profile'
+- assertVisible: 'Perfil del Conductor'

@@ -1,0 +1,45 @@
+name: Supabase Local Database Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  database:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.14.0'
+
+      - name: Enable Corepack & Install pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@11.18.0 --activate
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: '2.111.0'
+
+      - name: Start Local Supabase Stack
+        run: pnpm db:start
+
+      - name: Replay Migrations & Reset Database
+        run: pnpm db:reset
+
+      - name: Run Database Tests (pgTAP Infrastructure & 0 Domain Tables Check)
+        run: pnpm db:test
+
+      - name: Stop Supabase Stack
+        if: always()
+        run: pnpm db:stop
