@@ -6,11 +6,18 @@ function decodeBase64(str: string): string {
     const pad = base64.length % 4;
     const padded = pad ? base64 + '='.repeat(4 - pad) : base64;
 
-    if (typeof globalThis.atob === 'function') {
-      return globalThis.atob(padded);
+    const globalObj = globalThis as unknown as {
+      atob?: (_str: string) => string;
+      Buffer?: {
+        from: (_data: string, _encoding: string) => { toString: (_enc: string) => string };
+      };
+    };
+
+    if (typeof globalObj.atob === 'function') {
+      return globalObj.atob(padded);
     }
-    if (typeof Buffer !== 'undefined') {
-      return Buffer.from(padded, 'base64').toString('utf-8');
+    if (globalObj.Buffer) {
+      return globalObj.Buffer.from(padded, 'base64').toString('utf-8');
     }
   } catch {
     // Ignore decoding errors

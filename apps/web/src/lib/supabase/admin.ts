@@ -3,7 +3,7 @@ import { createAdminClient, SupabaseAdminConfig } from '@transport-platform/supa
 
 export function createWebAdminClient(config?: Partial<SupabaseAdminConfig>) {
   const url = config?.url || process.env.SUPABASE_URL || '';
-  const adminKey = config?.adminKey || process.env.SUPABASE_SECRET_KEY || '';
+  const adminKey = config?.adminKey || process.env.SUPABASE_ADMIN_KEY || '';
 
   return createAdminClient({ url, adminKey });
 }

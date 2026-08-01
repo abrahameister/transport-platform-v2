@@ -43,7 +43,8 @@ transport-platform-v2/
 │   └── workflows/
 │       ├── quality.yml          # Lint, format, typecheck, unit tests, doctor, export, build
 │       ├── web-e2e.yml          # Playwright E2E smoke tests
-│       └── database.yml         # Supabase local stack, migrations replay & pgTAP
+│       ├── database.yml         # Supabase local stack, migrations replay & pgTAP
+│       └── security.yml         # Auditoría de secretos y Gitleaks
 ├── apps/
 │   ├── driver/                  # App Expo SDK 57 Conductor (tabs: Today, Activity, Profile)
 │   ├── web/                     # Next.js 15 App Router (SuperAdmin, Operator, Client, Passenger, Sign-In)
@@ -98,10 +99,11 @@ transport-platform-v2/
 
 ### Paquetes y Exportaciones Controladas
 
-- `@transport-platform/supabase`: Encriptación y clientes aislados por contexto:
+- `@transport-platform/supabase`: Clientes aislados por contexto:
   - `@transport-platform/supabase/browser`: Cliente de navegador (Usa `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`).
   - `@transport-platform/supabase/server`: Cliente servidor Next.js.
-  - `@transport-platform/supabase/admin`: Cliente administrativo (Usa `SUPABASE_SECRET_KEY`, incluye `import 'server-only'` impidiendo su importación en UI de cliente).
+  - `@transport-platform/supabase/admin`: Factory administrativa para Node.js y worker/scripts (Usa `SUPABASE_ADMIN_KEY`). Las aplicaciones Web Next.js consumen este cliente exclusivamente a través del adapter `apps/web/src/lib/supabase/admin.ts`, donde se aplica el límite `import 'server-only'` para impedir su importación en UI de cliente.
+- Pruebas White-Label UI: Implementadas como **Contract Tests** (`theme.integration.test.tsx`) para verificar inyección de props y contratos estructurales del JSX en lugar de un renderizado DOM o nativo real.
 
 ---
 
@@ -109,29 +111,39 @@ transport-platform-v2/
 
 - **Migración Inicial:** `supabase/migrations/20260731000000_init_infrastructure.sql` activa las extensiones `postgis` y `pgcrypto`.
 - **Tablas de Dominio:** 0 tablas de dominio creadas en Sprint 0 (garantizando 100% de cumplimiento).
-- **Pruebas de Infraestructura (pgTAP):** `supabase/tests/0001_infrastructure.test.sql` valida la presencia de PostGIS y 0 tablas de dominio en el esquema `public`.
+- **Pruebas de Infraestructura (pgTAP):** `supabase/tests/0001_infrastructure.test.sql` valida invariancias permanentes de infraestructura (existencia del esquema `extensions`, instalación de `postgis` y `pgcrypto` en dicho esquema, y retorno válido de la versión de PostGIS) sin depender de conteos frágiles de tablas que caducarán al iniciar el Bloque 1.
 
 ---
 
-## 7. Evidencia de Comandos de Verificación Ejecutados
+## 7. Verificación Local vs. Integración Continua (CI)
 
-| Comando                            | Resultado  | Evidencia                                                                     |
-| ---------------------------------- | ---------- | ----------------------------------------------------------------------------- |
-| `npx pnpm format:check`            | **PASSED** | Todos los archivos cumplen con Prettier code style.                           |
-| `npx pnpm lint`                    | **PASSED** | ESLint 9 procesó los 10 paquetes sin errores ni advertencias.                 |
-| `npx pnpm typecheck`               | **PASSED** | 10/10 proyectos verificados por `tsc --noEmit` sin errores de tipos.          |
-| `npx pnpm test`                    | **PASSED** | 100% de los tests unitarios pasados (Vitest v4).                              |
-| `npx pnpm build`                   | **PASSED** | 9/9 proyectos compilados exitosamente (Next.js build estático y Expo export). |
-| `npx pnpm test:e2e`                | **PASSED** | 6/6 tests E2E de Playwright pasados exitosamente en Chromium.                 |
-| `node scripts/adversarial-scan.js` | **PASSED** | 0 credenciales filtradas, 0 auth fáctica y 0 ORMs detectados.                 |
+Se distingue estrictamente entre la ejecución en el entorno local del desarrollador y las pruebas automatizadas en los corredores oficiales de GitHub Actions sobre el SHA objetivo:
+
+| Comando / Suite        | Entorno de Validación | Criterio de Verificación / Observaciones                                                                  |
+| ---------------------- | --------------------- | --------------------------------------------------------------------------------------------------------- |
+| `pnpm format:check`    | Local + CI (Quality)  | Verificación de estilo Prettier sin modificaciones accidentales.                                          |
+| `pnpm lint`            | Local + CI (Quality)  | ESLint 9 en todos los paquetes del monorepo.                                                              |
+| `pnpm typecheck`       | Local + CI (Quality)  | Verificación estricta `tsc --noEmit` sin supresiones ni `!`.                                              |
+| `pnpm test`            | Local + CI (Quality)  | Unit y Contract tests via Vitest v4.                                                                      |
+| `pnpm db:test` (pgTAP) | CI (Database) / Local | Requiere motor de contenedores Docker/Podman activo. Valida invariancias permanentes de PostGIS/pgcrypto. |
+| `pnpm security:scan`   | Local + CI (Security) | Auditoría local sin secretos y sin ORMs.                                                                  |
+| `pnpm test:e2e`        | Local + CI (Web E2E)  | Pruebas de humo Playwright sobre las web shells.                                                          |
+| `pnpm driver:doctor`   | Local + CI (Quality)  | Diagnóstico de dependencias e integridad de Expo SDK 57.                                                  |
+| `pnpm driver:export`   | Local + CI (Quality)  | Compilación y exportación de artefactos de app nativa.                                                    |
+| `pnpm build`           | Local + CI (Quality)  | Compilación estática de todos los proyectos del workspace.                                                |
+
+_Nota: La aprobación formal del Sprint 0 requiere que los cuatro workflows oficiales en GitHub Actions culminen en estado `success` sobre el SHA final commit del PR #1._
 
 ---
 
 ## 8. Cobertura de Integración Continua (GitHub Actions)
 
-1. `.github/workflows/quality.yml`: Ejecuta verificación de formato, linting, checheo de tipos, unit tests, `expo-doctor`, `driver:export` y build del workspace en cada PR/push.
-2. `.github/workflows/web-e2e.yml`: Levanta servidor Next.js e instala navegadores Playwright para validar la renderización de todas las web shells.
-3. `.github/workflows/database.yml`: Inicia el contenedor Docker de Supabase CLI, aplica migraciones desde cero, corre las pruebas pgTAP (`pnpm db:test`) y detiene la instancia limpiamente (`supabase stop` con `if: always()`).
+El repositorio es protegido por cuatro workflows independientes:
+
+1. `.github/workflows/quality.yml`: Ejecuta verificación de formato, linting, typecheck, unit/contract tests, `expo-doctor`, `driver:export` y build del workspace.
+2. `.github/workflows/web-e2e.yml`: Levanta el servidor Next.js y ejecuta pruebas Playwright para validar flujos básicos en web shells.
+3. `.github/workflows/database.yml`: Utiliza Supabase CLI (`2.111.0`) en entorno Docker para inicializar stack local, aplicar migraciones desde cero, ejecutar pruebas pgTAP (`pnpm db:test`) y detener la instancia limpiamente (`supabase stop`).
+4. `.github/workflows/security.yml`: Ejecuta escáner personalizado (`pnpm security:scan`) y `gitleaks-action` sin supresiones para impedir fugas de credenciales o secretos en el historial.
 
 ---
 
@@ -160,6 +172,6 @@ El escáner sintético `scripts/adversarial-scan.js` se ejecutó contra la total
 
 ## 11. Conclusión y Declaración de Estado
 
-El repositorio **`transport-platform-v2`** cumple al 100% con los estándares de ingeniería de software, arquitectura modular, límites de seguridad y especificaciones del Product Owner.
+Los bloqueadores remanentes de calidad y base de datos correspondientes a la fundación de Sprint 0.1 han sido reparados sobre la rama `chore/sprint-0-foundation-repair` (partiendo del SHA base `2190b163af2b727a7912a739693bc4a402b835b4`).
 
-**ESTADO FINAL DEL REPOSITORIO:** **`READY FOR SPRINT 1`**
+**ESTADO FINAL DEL REPOSITORIO:** **`PENDING CI CONFIRMATION`** (Listo para fusionarse en `main` una vez que los cuatro workflows oficiales confirmen estado `success` en GitHub Actions sobre el SHA del commit de reparación).

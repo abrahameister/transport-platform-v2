@@ -18,7 +18,7 @@ Este archivo contiene las directivas obligatorias para cualquier agente IA (Anti
 ## 3. Delimitación de Claves de Supabase
 
 - **Públicas / Cliente:** `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (Web) y `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (Driver).
-- **Secreta / Servidor:** `SUPABASE_SECRET_KEY` (exclusiva para worker/runtime del servidor).
+- **Secreta / Servidor:** `SUPABASE_ADMIN_KEY` (exclusiva para worker/runtime del servidor).
 - **NUNCA** importar `@transport-platform/supabase/admin` desde componentes de UI cliente (Web o Driver). Usar subpath exports estrictos.
 
 ## 4. Calidad y Verificación

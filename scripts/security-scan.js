@@ -5,7 +5,7 @@ console.log('--- Executing Security & Secret Scan ---');
 
 const projectRoot = path.join(__dirname, '..');
 const secretRegexes = [
-  /SUPABASE_SECRET_KEY\s*=\s*['"]?(?!sb_secret_placeholder_local)[a-zA-Z0-9_\-\.]{20,}['"]?/gi,
+  /SUPABASE_ADMIN_KEY\s*=\s*['"]?(?!sb_secret_placeholder_local)[a-zA-Z0-9_\-\.]{20,}['"]?/gi,
   /ghp_[a-zA-Z0-9]{36}/gi,
   /aws_secret_access_key\s*=\s*['"]?[a-zA-Z0-9\/+=]{40}['"]?/gi,
 ];

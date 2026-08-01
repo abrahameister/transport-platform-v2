@@ -7,10 +7,10 @@ const logger = createLogger('worker');
 export function createHealthServer(): http.Server {
   // Verify Supabase Admin Client can be instantiated in Node.js
   const supabaseUrl = process.env.SUPABASE_URL || 'http://127.0.0.1:54321';
-  const supabaseSecretKey = process.env.SUPABASE_SECRET_KEY || 'sb_secret_placeholder_local';
+  const supabaseAdminKey = process.env.SUPABASE_ADMIN_KEY || 'sb_secret_placeholder_local';
 
   try {
-    const adminClient = createAdminClient({ url: supabaseUrl, adminKey: supabaseSecretKey });
+    const adminClient = createAdminClient({ url: supabaseUrl, adminKey: supabaseAdminKey });
     if (adminClient) {
       logger.info('Supabase Admin Client successfully initialized in worker process');
     }

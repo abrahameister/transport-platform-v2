@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { brandFixtures } from '@transport-platform/test-utils';
 import { ThemeProvider, AppShell, Button } from './index';
 
-describe('Web UI White-Label & Theme Integration Tests', () => {
+describe('Web UI White-Label & Theme Contract Tests', () => {
   it('instantiates components with Transportes Andina brand config', () => {
     const brand = brandFixtures.transportesAndina;
     expect(brand).toBeDefined();
