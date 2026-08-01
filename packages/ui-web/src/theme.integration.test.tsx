@@ -5,6 +5,7 @@ import { ThemeProvider, AppShell, Button } from './index';
 describe('Web UI White-Label & Theme Integration Tests', () => {
   it('instantiates components with Transportes Andina brand config', () => {
     const brand = brandFixtures.transportesAndina;
+    expect(brand).toBeDefined();
 
     const element = (
       <ThemeProvider brand={brand}>
@@ -21,6 +22,7 @@ describe('Web UI White-Label & Theme Integration Tests', () => {
 
   it('instantiates components with Movilidad Cordillera brand config', () => {
     const brand = brandFixtures.movilidadCordillera;
+    expect(brand).toBeDefined();
 
     const element = (
       <ThemeProvider brand={brand}>
@@ -37,6 +39,7 @@ describe('Web UI White-Label & Theme Integration Tests', () => {
 
   it('instantiates components with Transfer Austral brand config', () => {
     const brand = brandFixtures.transferAustral;
+    expect(brand).toBeDefined();
 
     const element = (
       <ThemeProvider brand={brand}>

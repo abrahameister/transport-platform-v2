@@ -1,5 +1,23 @@
 import { z } from 'zod';
 
+function decodeBase64(str: string): string {
+  try {
+    const base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+    const pad = base64.length % 4;
+    const padded = pad ? base64 + '='.repeat(4 - pad) : base64;
+
+    if (typeof globalThis.atob === 'function') {
+      return globalThis.atob(padded);
+    }
+    if (typeof Buffer !== 'undefined') {
+      return Buffer.from(padded, 'base64').toString('utf-8');
+    }
+  } catch {
+    // Ignore decoding errors
+  }
+  return '';
+}
+
 export function isLocalHost(urlStr: string): boolean {
   try {
     const parsed = new URL(urlStr);
@@ -17,7 +35,7 @@ export function isServiceRoleJwt(key: string): boolean {
     try {
       const parts = key.split('.');
       if (parts.length >= 2 && parts[1]) {
-        const payload = Buffer.from(parts[1], 'base64').toString('utf-8');
+        const payload = decodeBase64(parts[1]);
         if (payload.includes('"role":"service_role"') || payload.includes('service_role')) {
           return true;
         }
