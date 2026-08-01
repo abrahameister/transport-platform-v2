@@ -1,26 +1,56 @@
-# Flujo de Trabajo con Base de Datos (Supabase Local)
+# Database & Supabase Local Workflow — Transport Platform V2
 
-## Principios Fundamentales
+This document defines the database management workflow for **Transport Platform V2**.
 
-1. **Exclusividad Local en Sprint 0:** Todas las operaciones ocurren contra el stack local de Supabase.
-2. **Prohibición de Comandos Remotos:** Queda estrictamente prohibido ejecutar `supabase login`, `supabase link`, `supabase db push` o `supabase db pull` contra proyectos remotos.
-3. **Persistencia mediante Migraciones:** Los cambios a la base de datos se implementan secuencialmente en `supabase/migrations/`.
+## Architectural Directives & Strict Boundaries
 
-## Comandos Disponibles
+> [!CAUTION]
+> **Prohibited Remote Database Commands in Sprint 0 / Local Development**:
+>
+> - `supabase login` — Prohibited
+> - `supabase link` — Prohibited
+> - `supabase db push` — Prohibited
+> - `supabase db pull` (remote) — Prohibited
+> - Remote database connection strings — Prohibited
+> - Real remote API keys or secrets in source code — Prohibited
+
+All persistence development is conducted **100% locally** using Supabase CLI and Docker.
+
+---
+
+## Local Database Commands
 
 ```bash
-# Iniciar stack local de Supabase
+# Start local Supabase Docker stack
 pnpm db:start
 
-# Detener stack local
-pnpm db:stop
-
-# Consultar estado local
-pnpm db:status
-
-# Reiniciar base de datos y reaplicar migraciones desde cero
+# Replay migrations from scratch
 pnpm db:reset
 
-# Ejecutar pruebas SQL (pgTAP)
+# Run pgTAP infrastructure tests
 pnpm db:test
+
+# Check local container status
+pnpm db:status
+
+# Stop local Supabase stack
+pnpm db:stop
 ```
+
+---
+
+## Extensions Schema Strategy
+
+PostgreSQL extensions (`postgis`, `pgcrypto`) are installed explicitly into the `extensions` schema:
+
+```sql
+create schema if not exists extensions;
+
+create extension if not exists postgis
+  with schema extensions;
+
+create extension if not exists pgcrypto
+  with schema extensions;
+```
+
+pgTAP tests verify `extensions.postgis_full_version()` and assert `0` domain tables in `public`.

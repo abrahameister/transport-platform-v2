@@ -8,6 +8,11 @@
       "import": "./dist/browser.mjs",
       "require": "./dist/browser.js"
     },
+    "./native": {
+      "types": "./dist/native.d.ts",
+      "import": "./dist/native.mjs",
+      "require": "./dist/native.js"
+    },
     "./server": {
       "types": "./dist/server.d.ts",
       "import": "./dist/server.mjs",
@@ -20,14 +25,14 @@
     }
   },
   "scripts": {
-    "build": "tsup src/browser.ts src/server.ts src/admin.ts --format cjs,esm --dts",
+    "build": "tsup src/browser.ts src/native.ts src/server.ts src/admin.ts --format cjs,esm --dts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "test": "vitest run"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.0",
-    "server-only": "^0.0.1"
+    "zod": "^3.24.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

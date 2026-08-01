@@ -23,14 +23,18 @@ function sanitize(obj: unknown): unknown {
 }
 
 export class Logger {
-  constructor(private defaultContext: LogContext = {}) {}
+  private baseContext: LogContext;
+
+  constructor(defaultContext: LogContext = {}) {
+    this.baseContext = defaultContext;
+  }
 
   private log(level: LogLevel, message: string, context?: LogContext) {
     const entry = {
       timestamp: new Date().toISOString(),
       level,
       message,
-      context: sanitize({ ...this.defaultContext, ...context }),
+      context: sanitize({ ...this.baseContext, ...context }),
     };
     const output = JSON.stringify(entry);
 
@@ -64,3 +68,10 @@ export const logger = new Logger({
   application: 'transport-platform',
   environment: process.env.NODE_ENV || 'development',
 });
+
+export function createLogger(application: string): Logger {
+  return new Logger({
+    application,
+    environment: process.env.NODE_ENV || 'development',
+  });
+}

@@ -1,9 +1,11 @@
+'use client';
+
 import React from 'react';
 import { ContentContainer, Alert, PageHeader, TextField, Button } from '@transport-platform/ui-web';
 
 export default function SignInShellPage() {
   return (
-    <div
+    <main
       style={{
         minHeight: '100vh',
         display: 'flex',
@@ -19,13 +21,13 @@ export default function SignInShellPage() {
           Foundation shell — funcionalidad pendiente de Sprint posterior.
         </Alert>
         <form onSubmit={(e) => e.preventDefault()} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <TextField label="Correo electrónico" placeholder="usuario@empresa.com" disabled />
-          <TextField label="Contraseña" type="password" placeholder="••••••••" disabled />
+          <TextField id="email" label="Correo electrónico" placeholder="usuario@empresa.com" disabled />
+          <TextField id="password" label="Contraseña" type="password" placeholder="••••••••" disabled />
           <Button type="button" disabled variant="primary">
             Ingresar (Deshabilitado en Sprint 0)
           </Button>
         </form>
       </ContentContainer>
-    </div>
+    </main>
   );
 }

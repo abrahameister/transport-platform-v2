@@ -1,18 +1,32 @@
-# Baseline Técnico de Versiones — Transport Platform V2
+# Versiones de Baseline Congeladas — Transport Platform V2 (Sprint 0.1)
 
-Este documento registra el baseline exacto de versiones estables fijadas para el proyecto.
+Este documento registra las versiones exactas y resueltas del stack tecnológico productivo para asegurar reproducibilidad absoluta.
 
-| Herramienta / Librería | Versión Exacta / Rango Fijado | Notas de Configuración                                                         |
-| ---------------------- | ----------------------------- | ------------------------------------------------------------------------------ |
-| **Node.js**            | `v24.14.0`                    | Node 24 LTS. Pinned in `.nvmrc`, `.node-version`, `engines.node: ">=24 <25"`   |
-| **pnpm**               | `11.18.0`                     | Pinned in `packageManager: "pnpm@11.18.0"`                                     |
-| **Turborepo**          | `^2.4.4`                      | Gestor de monorepo                                                             |
-| **Next.js**            | `^15.2.0`                     | App Router (creado con `create-next-app@latest`)                               |
-| **React**              | `^19.0.0`                     | Administrado por Next.js y Expo (peerDependency en UI)                         |
-| **Expo SDK**           | `~57.0.0`                     | SDK 57 estable (creado con `create-expo-app@latest --template default@sdk-57`) |
-| **React Native**       | `0.76.7`                      | Administrado por Expo SDK 57                                                   |
-| **Supabase CLI**       | `^2.111.0`                    | Herramienta CLI de base de datos local                                         |
-| **TypeScript**         | `^5.8.2`                      | Compilador TypeScript en modo estricto                                         |
-| **Vitest**             | `^4.0.0`                      | Vitest v4 estable para pruebas unitarias                                       |
-| **Playwright**         | `^1.62.0`                     | Playwright estable para pruebas E2E web                                        |
-| **Maestro**            | `1.x`                         | Flujos de prueba para la aplicación Driver                                     |
+## Matriz de Baseline Principal
+
+| Componente            | Versión Declarada | Versión Resuelta en Lockfile | Restricción / Configuración                         |
+| --------------------- | ----------------- | ---------------------------- | --------------------------------------------------- |
+| **Node.js**           | `>=24 <25`        | `24.x LTS`                   | Enforzado en `package.json` (`engines`) y `.nvmrc`  |
+| **pnpm**              | `11.18.0`         | `11.18.0`                    | Declarado en `package.json` (`packageManager`)      |
+| **Turborepo**         | `^2.4.4`          | `2.10.7`                     | Gestor de monorepo                                  |
+| **TypeScript**        | `^5.8.2`          | `5.9.3`                      | Enforzado con `tsconfig.base.json`                  |
+| **Next.js (Web)**     | `^15.2.0`         | `15.5.22`                    | App Router (`apps/web`)                             |
+| **Expo SDK (Driver)** | `~57.0.0`         | `57.0.0`                     | Managed Workflow (`apps/driver`)                    |
+| **React Native**      | Managed SDK 57    | `0.86.2`                     | Prohibido fijar manualmente versión desalineada     |
+| **React (Mobile)**    | Managed SDK 57    | `19.2.3`                     | Prohibido fijar manualmente versión desalineada     |
+| **Expo Router**       | Managed SDK 57    | `57.0.9`                     | Enrutamiento móvil por archivos (`apps/driver/app`) |
+| **React Native Web**  | Managed SDK 57    | `0.21.2`                     | Bundling multi-plataforma para web/android/ios      |
+| **Vitest**            | `^4.0.0`          | `4.1.10`                     | Runner de unit tests                                |
+| **Playwright**        | `^1.62.0`         | `1.62.1`                     | Runner de smoke tests E2E                           |
+| **Supabase CLI**      | `^2.111.0`        | `2.111.0`                    | Entorno de desarrollo local con Docker              |
+
+## Validación de Expo SDK 57
+
+```bash
+pnpm --filter @transport-platform/driver exec npx expo install --check
+pnpm dlx expo-doctor@1.12.0 apps/driver
+pnpm --filter @transport-platform/driver exec expo export --platform all
+```
+
+- **Resultado `expo-doctor`:** 18/18 checks pasados con 0 errores.
+- **Resultado `expo export --platform all`:** 3 bundles exportados (Web, Android, iOS) y 131 assets empacados a `apps/driver/dist`.

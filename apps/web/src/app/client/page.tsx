@@ -1,11 +1,13 @@
+'use client';
+
 import React from 'react';
-import { AppShell, Alert, PageHeader, ContentContainer } from '@transport-platform/ui-web';
+import { AppShell, ContentContainer, Alert, PageHeader } from '@transport-platform/ui-web';
 
 export default function ClientShellPage() {
   return (
-    <AppShell title="Portal Empresa Cliente" brandName="Transport Platform V2">
-      <PageHeader title="Corporate Client Shell" subtitle="Gestión de Solicitudes y Colaboradores" />
+    <AppShell title="Empresa Cliente Portal">
       <ContentContainer>
+        <PageHeader title="Corporate Client Shell" subtitle="Fundación técnica productiva" />
         <Alert variant="info" title="Estado de Infraestructura">
           Foundation shell — funcionalidad pendiente de Sprint posterior.
         </Alert>

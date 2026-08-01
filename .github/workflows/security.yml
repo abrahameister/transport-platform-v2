@@ -1,0 +1,49 @@
+name: Security & Secret Leak Prevention
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  secret-scan:
+    name: Secret & Credential Leak Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository (full commit history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js (Node 24 LTS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+
+      - name: Install pnpm (11.18.0)
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.18.0
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Secret Leak Audit Script
+        run: pnpm security:scan
+
+      - name: Gitleaks Action (Pinned v8.23.0)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_VERSION: 8.23.0
+        with:
+          fail: true

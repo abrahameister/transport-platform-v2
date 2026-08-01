@@ -1,24 +1,20 @@
 import { createClient as createSupabaseClient, SupabaseClient } from '@supabase/supabase-js';
+import { validateSupabaseUrl, validatePublishableKey } from './validation';
 
 export interface SupabaseBrowserConfig {
-  supabaseUrl?: string;
-  publishableKey?: string;
+  url: string;
+  publishableKey: string;
 }
 
-export function createBrowserClient(config?: SupabaseBrowserConfig): SupabaseClient {
-  const url =
-    config?.supabaseUrl ||
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-    process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-    'http://127.0.0.1:54321';
-  const key =
-    config?.publishableKey ||
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-    process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-    'sb_publishable_placeholder';
+export function createBrowserClient(config: SupabaseBrowserConfig): SupabaseClient {
+  const url = validateSupabaseUrl(config?.url);
+  const key = validatePublishableKey(config?.publishableKey, url, 'browser');
 
-  if (!url) {
-    throw new Error('[Supabase Browser Client] Supabase URL is missing.');
-  }
-  return createSupabaseClient(url, key);
+  return createSupabaseClient(url, key, {
+    auth: {
+      persistSession: typeof window !== 'undefined',
+      autoRefreshToken: typeof window !== 'undefined',
+      detectSessionInUrl: typeof window !== 'undefined',
+    },
+  });
 }

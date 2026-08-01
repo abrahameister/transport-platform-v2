@@ -1,4 +1,4 @@
-name: Workspace Quality & Build
+name: Quality & Monorepo Foundation Verification
 
 on:
   push:
@@ -6,42 +6,60 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  quality:
+  verify-foundation:
+    name: Monorepo Foundation Check & Build
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js 24
+      - name: Setup Node.js (Node 24 LTS)
         uses: actions/setup-node@v4
         with:
-          node-version: '24.14.0'
+          node-version: 24.x
 
-      - name: Enable Corepack & Install pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@11.18.0 --activate
+      - name: Install pnpm (11.18.0)
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.18.0
+
+      - name: Restore pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Check code formatting
+      - name: Check code formatting (Prettier)
         run: pnpm format:check
 
-      - name: Run ESLint
+      - name: Lint workspace packages (ESLint Flat Config)
         run: pnpm lint
 
-      - name: Run TypeScript typecheck
+      - name: Typecheck TypeScript project references
         run: pnpm typecheck
 
-      - name: Run Unit Tests
+      - name: Run unit & component integration tests (Vitest)
         run: pnpm test
 
-      - name: Validate Expo Driver App
-        run: |
-          pnpm driver:doctor
-          pnpm driver:export
+      - name: Verify Expo SDK 57 Driver App health (expo-doctor)
+        run: pnpm driver:doctor
 
-      - name: Build All Monorepo Packages & Apps
+      - name: Build driver mobile bundles for Web, Android & iOS (Expo Export)
+        run: pnpm driver:export
+
+      - name: Build all workspace packages & applications (Turbo)
         run: pnpm build

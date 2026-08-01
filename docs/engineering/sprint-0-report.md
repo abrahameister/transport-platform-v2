@@ -19,19 +19,19 @@ El repositorio `transport-platform-v2` cuenta con la arquitectura completa de mo
 
 ## 3. Matriz de Versiones de Baseline Resueltas y Congeladas
 
-| Tecnología / Herramienta | Versión Declarada / Resuelta | Restricción / Configuración |
-|---|---|---|
-| **Node.js** | `24.x` (latest patch) | `engines.node`: `>=24 <25` |
-| **pnpm** | `11.18.0` | `packageManager`: `pnpm@11.18.0` |
-| **Turborepo** | `2.4.4` (resolución `2.10.7`) | `turbo: ^2.4.4` |
-| **TypeScript** | `5.8.2` (resolución `5.9.3`) | strict baseline `tsconfig.base.json` |
-| **Next.js (Web Shells)** | `15.2.0` (resolución `15.5.22`) | App Router (`apps/web`) |
-| **Expo SDK (Driver App)** | `SDK 57` (`57.0.0`) | Managed Workflow (`apps/driver`) |
-| **React** | `19.0.0` (Web) / Managed Expo | No forzado globalmente |
-| **React Native** | Managed por Expo SDK 57 | No forzado globalmente |
-| **Vitest** | `4.0.0` (resolución `4.0.18`) | Configurado en paquetes y worker |
-| **Playwright** | `1.62.0` (resolución `1.62.1`) | E2E smoke test suite |
-| **Supabase CLI** | `2.111.0` | Stack local Docker + PostGIS |
+| Tecnología / Herramienta  | Versión Declarada / Resuelta    | Restricción / Configuración          |
+| ------------------------- | ------------------------------- | ------------------------------------ |
+| **Node.js**               | `24.x` (latest patch)           | `engines.node`: `>=24 <25`           |
+| **pnpm**                  | `11.18.0`                       | `packageManager`: `pnpm@11.18.0`     |
+| **Turborepo**             | `2.4.4` (resolución `2.10.7`)   | `turbo: ^2.4.4`                      |
+| **TypeScript**            | `5.8.2` (resolución `5.9.3`)    | strict baseline `tsconfig.base.json` |
+| **Next.js (Web Shells)**  | `15.2.0` (resolución `15.5.22`) | App Router (`apps/web`)              |
+| **Expo SDK (Driver App)** | `SDK 57` (`57.0.0`)             | Managed Workflow (`apps/driver`)     |
+| **React**                 | `19.0.0` (Web) / Managed Expo   | No forzado globalmente               |
+| **React Native**          | Managed por Expo SDK 57         | No forzado globalmente               |
+| **Vitest**                | `4.0.0` (resolución `4.0.18`)   | Configurado en paquetes y worker     |
+| **Playwright**            | `1.62.0` (resolución `1.62.1`)  | E2E smoke test suite                 |
+| **Supabase CLI**          | `2.111.0`                       | Stack local Docker + PostGIS         |
 
 ---
 
@@ -91,11 +91,13 @@ transport-platform-v2/
 ## 5. Aplicaciones, Paquetes y Límites de Seguridad
 
 ### Aplicaciones
+
 - `apps/web`: 5 shells funcionales de interfaz (`/`, `/platform`, `/operator`, `/client`, `/passenger`, `/sign-in`) utilizando `@transport-platform/ui-web` y `@transport-platform/design-tokens`.
 - `apps/driver`: Aplicación nativa Expo SDK 57 con navegación por pestañas (`Today`, `Activity`, `Profile`) usando `@transport-platform/ui-native`.
 - `apps/worker`: Servicio asíncrono en Node.js 24 con servidor HTTP de monitoreo (`GET /health`) y manejo limpio de señales de apagado.
 
 ### Paquetes y Exportaciones Controladas
+
 - `@transport-platform/supabase`: Encriptación y clientes aislados por contexto:
   - `@transport-platform/supabase/browser`: Cliente de navegador (Usa `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`).
   - `@transport-platform/supabase/server`: Cliente servidor Next.js.
@@ -113,15 +115,15 @@ transport-platform-v2/
 
 ## 7. Evidencia de Comandos de Verificación Ejecutados
 
-| Comando | Resultado | Evidencia |
-|---|---|---|
-| `npx pnpm format:check` | **PASSED** | Todos los archivos cumplen con Prettier code style. |
-| `npx pnpm lint` | **PASSED** | ESLint 9 procesó los 10 paquetes sin errores ni advertencias. |
-| `npx pnpm typecheck` | **PASSED** | 10/10 proyectos verificados por `tsc --noEmit` sin errores de tipos. |
-| `npx pnpm test` | **PASSED** | 100% de los tests unitarios pasados (Vitest v4). |
-| `npx pnpm build` | **PASSED** | 9/9 proyectos compilados exitosamente (Next.js build estático y Expo export). |
-| `npx pnpm test:e2e` | **PASSED** | 6/6 tests E2E de Playwright pasados exitosamente en Chromium. |
-| `node scripts/adversarial-scan.js` | **PASSED** | 0 credenciales filtradas, 0 auth fáctica y 0 ORMs detectados. |
+| Comando                            | Resultado  | Evidencia                                                                     |
+| ---------------------------------- | ---------- | ----------------------------------------------------------------------------- |
+| `npx pnpm format:check`            | **PASSED** | Todos los archivos cumplen con Prettier code style.                           |
+| `npx pnpm lint`                    | **PASSED** | ESLint 9 procesó los 10 paquetes sin errores ni advertencias.                 |
+| `npx pnpm typecheck`               | **PASSED** | 10/10 proyectos verificados por `tsc --noEmit` sin errores de tipos.          |
+| `npx pnpm test`                    | **PASSED** | 100% de los tests unitarios pasados (Vitest v4).                              |
+| `npx pnpm build`                   | **PASSED** | 9/9 proyectos compilados exitosamente (Next.js build estático y Expo export). |
+| `npx pnpm test:e2e`                | **PASSED** | 6/6 tests E2E de Playwright pasados exitosamente en Chromium.                 |
+| `node scripts/adversarial-scan.js` | **PASSED** | 0 credenciales filtradas, 0 auth fáctica y 0 ORMs detectados.                 |
 
 ---
 
@@ -136,6 +138,7 @@ transport-platform-v2/
 ## 9. Reporte del Escáner Adversario de Seguridad
 
 El escáner sintético `scripts/adversarial-scan.js` se ejecutó contra la totalidad del código fuente arrojando:
+
 - **Secretos detectados:** `0` (Sin claves JWT, Service Keys o tokens expuestos).
 - **Patrones de Auth Mock detectados:** `0` (No existen `SuperAdminContext`, `OperationalContext`, `ClientPortalContext`, `DriverContext`, ni usuarios falsos hardcodeados).
 - **ORMs Prohibidos detectados:** `0` (No existe rastro de Prisma, Drizzle, TypeORM o Sequelize).
@@ -145,6 +148,7 @@ El escáner sintético `scripts/adversarial-scan.js` se ejecutó contra la total
 ## 10. Deuda Técnica Conocida y Elementos Diferidos
 
 ### Elementos Marcados explícitamente como DEFERRED para Sprints Posteriores:
+
 - **Archivos de fuentes tipográficas personalizadas:** Uso de `fontFamily.fallback` (`system-ui, sans-serif`).
 - **Paletas cromáticas primitivas extendidas:** Únicamente tokens semánticos de negocio B2B activos.
 - **Assets de marca finales:** Uso de imágenes placeholder SVG/PNG.

@@ -1,17 +1,31 @@
--- Test: 0001_infrastructure.test.sql
--- Verifies that PostGIS is installed and no operational domain tables exist in Sprint 0.
+-- Infrastructure Verification Test Suite — Transport Platform V2 (pgTAP)
 
-BEGIN;
-SELECT plan(2);
+begin;
 
--- 1. Check if postgis extension is installed
-SELECT has_extension('extensions', 'postgis', 'PostGIS extension should be installed under extensions schema');
+select plan(5);
 
--- 2. Verify 0 domain tables exist in public schema
-SELECT is_empty(
-  $$ SELECT tablename FROM pg_tables WHERE schemaname = 'public' $$,
-  'Public schema must not contain any operational domain tables in Sprint 0'
+-- 1. Verify schema 'extensions' exists
+select has_schema('extensions', 'Schema extensions should exist');
+
+-- 2. Verify PostGIS extension is installed
+select has_extension('postgis', 'PostGIS extension should be installed');
+
+-- 3. Verify pgcrypto extension is installed
+select has_extension('pgcrypto', 'pgcrypto extension should be installed');
+
+-- 4. Verify extensions.postgis_full_version() function returns valid string
+select isnt_empty(
+  extensions.postgis_full_version(),
+  'extensions.postgis_full_version() should return a non-empty version string'
 );
 
-SELECT * FROM finish();
-ROLLBACK;
+-- 5. Verify 0 domain tables exist in public schema
+select is(
+  (select count(*)::integer from information_schema.tables where table_schema = 'public'),
+  0,
+  'Public schema should contain exactly 0 domain tables in Sprint 0'
+);
+
+select * from finish();
+
+rollback;
