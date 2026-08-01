@@ -1,9 +1,13 @@
-'use client';
+import React, { Suspense } from 'react';
+import { SignInForm } from './SignInForm';
+import { Spinner } from '@transport-platform/ui-web';
 
-import React from 'react';
-import { ContentContainer, Alert, PageHeader, TextField, Button } from '@transport-platform/ui-web';
+export const metadata = {
+  title: 'Iniciar Sesión | Transport Platform V2',
+  description: 'Portal de autenticación seguro para Operadores, Transportistas y SuperAdmins.',
+};
 
-export default function SignInShellPage() {
+export default function SignInPage() {
   return (
     <main
       style={{
@@ -11,23 +15,23 @@ export default function SignInShellPage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#F4F5F7',
-        padding: '16px',
+        background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%)',
+        padding: '20px',
+        fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       }}
     >
-      <ContentContainer>
-        <PageHeader title="Iniciar Sesión" subtitle="Transport Platform V2" />
-        <Alert variant="info" title="Estado de Infraestructura" style={{ marginBottom: '16px' }}>
-          Foundation shell — funcionalidad pendiente de Sprint posterior.
-        </Alert>
-        <form onSubmit={(e) => e.preventDefault()} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <TextField id="email" label="Correo electrónico" placeholder="usuario@empresa.com" disabled />
-          <TextField id="password" label="Contraseña" type="password" placeholder="••••••••" disabled />
-          <Button type="button" disabled variant="primary">
-            Ingresar (Deshabilitado en Sprint 0)
-          </Button>
-        </form>
-      </ContentContainer>
+      <div style={{ width: '100%', maxWidth: '520px' }}>
+        <Suspense
+          fallback={
+            <div style={{ textAlign: 'center', padding: '40px', color: '#FFF' }}>
+              <Spinner size={32} />
+              <p style={{ marginTop: '16px', fontSize: '14px', color: '#CBD5E1' }}>Cargando portal seguro...</p>
+            </div>
+          }
+        >
+          <SignInForm />
+        </Suspense>
+      </div>
     </main>
   );
 }

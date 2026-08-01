@@ -23,7 +23,8 @@ function scanDirectory(dir) {
         entry.name === '.next' ||
         entry.name === '.expo' ||
         entry.name === 'dist' ||
-        entry.name === '.turbo'
+        entry.name === '.turbo' ||
+        entry.name === '.dev'
       ) {
         continue;
       }
@@ -36,7 +37,9 @@ function scanDirectory(dir) {
         entry.name === 'pnpm-lock.yaml' ||
         entry.name.endsWith('.test.ts') ||
         entry.name.endsWith('.test.tsx') ||
-        entry.name.endsWith('.spec.ts')
+        entry.name.endsWith('.spec.ts') ||
+        entry.name.startsWith('.env') ||
+        entry.name === 'test-credentials.local.json'
       ) {
         continue;
       }

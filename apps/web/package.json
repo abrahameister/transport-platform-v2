@@ -10,6 +10,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.49.1",
     "@transport-platform/design-tokens": "workspace:*",
     "@transport-platform/supabase": "workspace:*",
     "@transport-platform/ui-web": "workspace:*",

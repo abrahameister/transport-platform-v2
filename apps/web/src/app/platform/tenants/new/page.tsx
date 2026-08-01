@@ -1,0 +1,50 @@
+import React from 'react';
+import { requirePlatformAdmin } from '@/lib/auth/guards';
+import { ForbiddenView } from '@/components/ForbiddenView';
+import { NewTenantForm } from './NewTenantForm';
+import { LogoutButton } from '@/components/LogoutButton';
+
+export const metadata = {
+  title: 'Nueva Empresa | Platform SuperAdmin Portal',
+  description: 'Formulario de alta para una nueva empresa transportista en Transport Platform V2.',
+};
+
+export default async function NewTenantPage() {
+  const auth = await requirePlatformAdmin();
+
+  if (!auth.authorized) {
+    return <ForbiddenView reason={auth.message} userEmail={auth.email || undefined} />;
+  }
+
+  return (
+    <div style={{ minHeight: '100vh', backgroundColor: '#F8FAFC', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+      <header
+        style={{
+          backgroundColor: '#0F172A',
+          color: '#F8FAFC',
+          padding: '16px 32px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          borderBottom: '1px solid #1E293B',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <span style={{ fontWeight: 800, fontSize: '18px', color: '#3B82F6' }}>TP</span>
+          <span style={{ fontSize: '16px', fontWeight: 700 }}>Transport Platform V2</span>
+          <span style={{ fontSize: '14px', color: '#64748B' }}>/ Onboarding</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', fontSize: '13px' }}>
+          <span>
+            Conectado como: <strong>{auth.email}</strong>
+          </span>
+          <LogoutButton variant="outline" />
+        </div>
+      </header>
+
+      <main style={{ padding: '40px 20px' }}>
+        <NewTenantForm />
+      </main>
+    </div>
+  );
+}
