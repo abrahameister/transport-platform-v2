@@ -130,6 +130,9 @@ begin
 end;
 $$;
 
+-- Grant minimal read permissions on temporary fixtures to application roles
+grant select on table _test_ids to anon, authenticated, service_role;
+
 -- ============================================================================
 -- TEST CASE 1: Anónimos obtienen cero acceso
 -- ============================================================================
