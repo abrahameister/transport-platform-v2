@@ -48,7 +48,7 @@ begin
   v_id_a := public.create_tenant_with_defaults('11111111-1111-1111-1111-111111111111'::uuid, 'alice@transport.dev', 'tenant-a', 'Tenant A Legal S.A.', 'Tenant A Express', 'UTC', 'es-CL');
   v_id_b := public.create_tenant_with_defaults('11111111-1111-1111-1111-111111111111'::uuid, 'alice@transport.dev', 'tenant-b', 'Tenant B Legal S.A.', 'Tenant B Logistics', 'UTC', 'es-CL');
   v_id_c := public.create_tenant_with_defaults('11111111-1111-1111-1111-111111111111'::uuid, 'alice@transport.dev', 'tenant-c', 'Tenant C Legal S.A.', 'Tenant C Cargo', 'UTC', 'es-CL');
-  
+
   insert into _test_ids (tenant_a, tenant_b, tenant_c) values (v_id_a, v_id_b, v_id_c);
 end;
 $$;
@@ -59,9 +59,13 @@ select is(
   '2. create_tenant_with_defaults siempre crea el tenant en estado draft'
 );
 
--- Activate Tenant A and Tenant B via activate_tenant RPC
-perform public.activate_tenant('11111111-1111-1111-1111-111111111111'::uuid, 'alice@transport.dev', (select tenant_a from _test_ids));
-perform public.activate_tenant('11111111-1111-1111-1111-111111111111'::uuid, 'alice@transport.dev', (select tenant_b from _test_ids));
+-- Activate Tenant A and Tenant B via activate_tenant RPC inside DO block
+do $$
+begin
+  perform public.activate_tenant('11111111-1111-1111-1111-111111111111'::uuid, 'alice@transport.dev', (select tenant_a from _test_ids));
+  perform public.activate_tenant('11111111-1111-1111-1111-111111111111'::uuid, 'alice@transport.dev', (select tenant_b from _test_ids));
+end;
+$$;
 
 select is(
   (select status::text from public.tenants where id = (select tenant_a from _test_ids)),
@@ -108,20 +112,20 @@ declare
   v_rev_id uuid;
 begin
   select tenant_a, tenant_b into v_a, v_b from _test_ids;
-  
+
   v_token := public.create_tenant_invitation('11111111-1111-1111-1111-111111111111'::uuid, 'alice@transport.dev', v_b, 'dave@transport.dev', 'tenant_admin'::public.tenant_role, 72);
   v_eve_token := public.create_tenant_invitation('11111111-1111-1111-1111-111111111111'::uuid, 'alice@transport.dev', v_b, 'eve@transport.dev', 'tenant_admin'::public.tenant_role, 72);
   v_exp_token := public.create_tenant_invitation('11111111-1111-1111-1111-111111111111'::uuid, 'alice@transport.dev', v_a, 'dave@transport.dev', 'tenant_admin'::public.tenant_role, 72);
   v_rev_token := public.create_tenant_invitation('11111111-1111-1111-1111-111111111111'::uuid, 'alice@transport.dev', v_a, 'dave@transport.dev', 'tenant_admin'::public.tenant_role, 72);
   v_other := public.create_tenant_invitation('11111111-1111-1111-1111-111111111111'::uuid, 'alice@transport.dev', v_a, 'someoneelse@transport.dev', 'tenant_admin'::public.tenant_role, 72);
-  
+
   -- Force expire v_exp_token
   update public.tenant_invitations set expires_at = now() - interval '2 hours' where token_hash = encode(extensions.digest(v_exp_token, 'sha256'), 'hex');
-  
-  -- Revoke v_rev_token via RPC with verified actor
+
+  -- Revoke v_rev_token via RPC with verified actor inside DO block
   select id into v_rev_id from public.tenant_invitations where token_hash = encode(extensions.digest(v_rev_token, 'sha256'), 'hex');
   perform public.revoke_tenant_invitation('11111111-1111-1111-1111-111111111111'::uuid, 'alice@transport.dev', v_rev_id);
-  
+
   update _test_ids set inv_token = v_token, inv_eve_token = v_eve_token, inv_exp_token = v_exp_token, inv_rev_token = v_rev_token, inv_other_token = v_other;
 end;
 $$;
@@ -291,9 +295,13 @@ select throws_ok(
   '24. set_active_tenant rechaza tenant ajeno o donde no es miembro activo'
 );
 
--- Suspend Tenant A via service_role and check set_active_tenant refusal
+-- Suspend Tenant A via service_role inside DO block and check set_active_tenant refusal
 reset role;
-perform public.suspend_tenant('11111111-1111-1111-1111-111111111111'::uuid, 'alice@transport.dev', (select tenant_a from _test_ids));
+do $$
+begin
+  perform public.suspend_tenant('11111111-1111-1111-1111-111111111111'::uuid, 'alice@transport.dev', (select tenant_a from _test_ids));
+end;
+$$;
 
 select set_config('role', 'authenticated', true);
 select set_config('request.jwt.claims', json_build_object('sub', '11111111-1111-1111-1111-111111111111')::text, true);
@@ -312,9 +320,13 @@ select is(
   '26. Tenant suspendido obtiene cero acceso (filas ocultadas)'
 );
 
--- Reactivate Tenant A and restore active context for remaining tests
+-- Reactivate Tenant A and restore active context for remaining tests inside DO block
 reset role;
-perform public.activate_tenant('11111111-1111-1111-1111-111111111111'::uuid, 'alice@transport.dev', (select tenant_a from _test_ids));
+do $$
+begin
+  perform public.activate_tenant('11111111-1111-1111-1111-111111111111'::uuid, 'alice@transport.dev', (select tenant_a from _test_ids));
+end;
+$$;
 update public.user_tenant_context set active_tenant_id = (select tenant_a from _test_ids) where user_id = '11111111-1111-1111-1111-111111111111'::uuid;
 
 -- ============================================================================
@@ -339,8 +351,12 @@ reset role;
 update public.profiles set status = 'active'::public.profile_status where id = '22222222-2222-2222-2222-222222222222'::uuid;
 update public.user_tenant_context set active_tenant_id = (select tenant_b from _test_ids) where user_id = '22222222-2222-2222-2222-222222222222'::uuid;
 
--- Revoke Charlie's membership
-perform public.revoke_tenant_membership('11111111-1111-1111-1111-111111111111'::uuid, 'alice@transport.dev', (select tenant_a from _test_ids), '33333333-3333-3333-3333-333333333333'::uuid);
+-- Revoke Charlie's membership inside DO block
+do $$
+begin
+  perform public.revoke_tenant_membership('11111111-1111-1111-1111-111111111111'::uuid, 'alice@transport.dev', (select tenant_a from _test_ids), '33333333-3333-3333-3333-333333333333'::uuid);
+end;
+$$;
 insert into public.user_tenant_context (user_id, active_tenant_id) values ('33333333-3333-3333-3333-333333333333'::uuid, (select tenant_a from _test_ids)) on conflict (user_id) do update set active_tenant_id = excluded.active_tenant_id;
 
 select set_config('role', 'authenticated', true);
