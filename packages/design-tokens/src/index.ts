@@ -7,6 +7,13 @@
 
 export const NEEDS_SOURCE_VALUE = 'NEEDS_SOURCE_VALUE' as const;
 
+export const developmentFallbackMeta = {
+  status: NEEDS_SOURCE_VALUE,
+  productionApproved: false,
+  message:
+    'Primitive colors and font files must not be used directly in production UI. All components consume semantic tokens.',
+};
+
 export const OFFICIAL_FONT_FAMILY = 'Latam_Sans' as const;
 export const FONT_FALLBACK = 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' as const;
 
@@ -17,90 +24,20 @@ export const typography = {
     cssVariable: 'var(--font-latam-sans, system-ui, -apple-system, sans-serif)',
   },
   scale: {
-    displayLg: {
-      fontSize: 48,
-      lineHeight: 62,
-      letterSpacing: -0.5,
-      fontWeight: '700',
-    },
-    displayMd: {
-      fontSize: 40,
-      lineHeight: 52,
-      letterSpacing: -0.5,
-      fontWeight: '700',
-    },
-    headingXl: {
-      fontSize: 32,
-      lineHeight: 42,
-      letterSpacing: 0.25,
-      fontWeight: '700',
-    },
-    headingLg: {
-      fontSize: 28,
-      lineHeight: 36,
-      letterSpacing: 0.25,
-      fontWeight: '700',
-    },
-    headingMd: {
-      fontSize: 24,
-      lineHeight: 32,
-      letterSpacing: 0.25,
-      fontWeight: '700',
-    },
-    headingSm: {
-      fontSize: 20,
-      lineHeight: 26,
-      letterSpacing: 0.25,
-      fontWeight: '700',
-    },
-    headingXs: {
-      fontSize: 20,
-      lineHeight: 26,
-      letterSpacing: 0.25,
-      fontWeight: '700',
-    },
-    bodyLg: {
-      fontSize: 18,
-      lineHeight: 24,
-      letterSpacing: 0.25,
-      fontWeight: '400',
-    },
-    bodyMd: {
-      fontSize: 16,
-      lineHeight: 22,
-      letterSpacing: 0.25,
-      fontWeight: '400',
-    },
-    bodySm: {
-      fontSize: 14,
-      lineHeight: 18,
-      letterSpacing: 0.25,
-      fontWeight: '400',
-    },
-    labelLg: {
-      fontSize: 18,
-      lineHeight: 18,
-      letterSpacing: 0,
-      fontWeight: '400',
-    },
-    labelMd: {
-      fontSize: 16,
-      lineHeight: 16,
-      letterSpacing: 0,
-      fontWeight: '400',
-    },
-    labelSm: {
-      fontSize: 14,
-      lineHeight: 14,
-      letterSpacing: 0,
-      fontWeight: '400',
-    },
-    labelXs: {
-      fontSize: 12,
-      lineHeight: 12,
-      letterSpacing: 0,
-      fontWeight: '400',
-    },
+    displayLg: { fontSize: 48, lineHeight: 62, letterSpacing: -0.5, fontWeight: '700' },
+    displayMd: { fontSize: 40, lineHeight: 52, letterSpacing: -0.5, fontWeight: '700' },
+    headingXl: { fontSize: 32, lineHeight: 42, letterSpacing: 0.25, fontWeight: '700' },
+    headingLg: { fontSize: 28, lineHeight: 36, letterSpacing: 0.25, fontWeight: '700' },
+    headingMd: { fontSize: 24, lineHeight: 32, letterSpacing: 0.25, fontWeight: '700' },
+    headingSm: { fontSize: 20, lineHeight: 26, letterSpacing: 0.25, fontWeight: '700' },
+    headingXs: { fontSize: 20, lineHeight: 26, letterSpacing: 0.25, fontWeight: '700' },
+    bodyLg: { fontSize: 18, lineHeight: 24, letterSpacing: 0.25, fontWeight: '400' },
+    bodyMd: { fontSize: 16, lineHeight: 22, letterSpacing: 0.25, fontWeight: '400' },
+    bodySm: { fontSize: 14, lineHeight: 18, letterSpacing: 0.25, fontWeight: '400' },
+    labelLg: { fontSize: 18, lineHeight: 18, letterSpacing: 0, fontWeight: '400' },
+    labelMd: { fontSize: 16, lineHeight: 16, letterSpacing: 0, fontWeight: '400' },
+    labelSm: { fontSize: 14, lineHeight: 14, letterSpacing: 0, fontWeight: '400' },
+    labelXs: { fontSize: 12, lineHeight: 12, letterSpacing: 0, fontWeight: '400' },
   },
 };
 
@@ -173,8 +110,8 @@ export interface SemanticTokens {
 }
 
 /**
- * Official Collection: latam-b2b/light
- * All colors are exposed strictly via semantic tokens.
+ * Official Contract Collection: latam-b2b/light
+ * All components consume semantic tokens via ThemeProvider.
  */
 export const semanticTokens: SemanticTokens = {
   text: {
@@ -215,9 +152,4 @@ export const semanticTokens: SemanticTokens = {
     primaryActive: '#0047B3',
     disabled: '#A5ADBA',
   },
-};
-
-export const primitivePaletteDisclaimer = {
-  status: NEEDS_SOURCE_VALUE,
-  message: 'Primitive colors must not be consumed directly by UI components. All components consume semantic tokens.',
 };

@@ -23,6 +23,19 @@
     "isolatedModules": true,
     "declaration": true,
     "declarationMap": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@transport-platform/design-tokens": ["packages/design-tokens/src/index.ts"],
+      "@transport-platform/observability": ["packages/observability/src/index.ts"],
+      "@transport-platform/test-utils": ["packages/test-utils/src/index.ts"],
+      "@transport-platform/ui-web": ["packages/ui-web/src/index.tsx"],
+      "@transport-platform/ui-native": ["packages/ui-native/src/index.tsx"],
+      "@transport-platform/supabase/browser": ["packages/supabase/src/browser.ts"],
+      "@transport-platform/supabase/native": ["packages/supabase/src/native.ts"],
+      "@transport-platform/supabase/server": ["packages/supabase/src/server.ts"],
+      "@transport-platform/supabase/admin": ["packages/supabase/src/admin.ts"],
+      "@transport-platform/supabase": ["packages/supabase/src/browser.ts"]
+    }
   }
 }

@@ -1,14 +1,19 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
+import { useNativeTheme, useNativeBrand } from '@transport-platform/ui-native';
 
 export default function TabLayout() {
+  const { tokens } = useNativeTheme();
+  const brand = useNativeBrand();
+  const brandColor = brand.semanticColorAliases?.brandPrimary || tokens.surface.brand;
+
   return (
     <Tabs
       screenOptions={{
-        headerStyle: { backgroundColor: '#0052CC' },
-        headerTintColor: '#FFFFFF',
+        headerStyle: { backgroundColor: brandColor },
+        headerTintColor: tokens.text.onPrimary,
         headerTitleStyle: { fontWeight: '700' },
-        tabBarActiveTintColor: '#0052CC',
+        tabBarActiveTintColor: brandColor,
       }}
     >
       <Tabs.Screen name="index" options={{ title: 'Today' }} />

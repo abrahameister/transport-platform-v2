@@ -1,0 +1,11 @@
+# Gitleaks Configuration — Transport Platform V2
+title = "Gitleaks Config"
+
+[allowlist]
+description = "Allow synthetic mock test keys in unit test files"
+paths = [
+  '''packages/supabase/src/boundaries\.test\.ts$''',
+  '''.*\.test\.ts$''',
+  '''.*\.test\.tsx$''',
+  '''.*\.spec\.ts$'''
+]

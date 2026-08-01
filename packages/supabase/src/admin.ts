@@ -1,28 +1,25 @@
-import 'server-only';
 import { createClient as createSupabaseClient, SupabaseClient } from '@supabase/supabase-js';
+import { validateSupabaseUrl, validateAdminKey } from './validation';
 
 export interface SupabaseAdminConfig {
-  supabaseUrl?: string;
-  secretKey?: string;
+  url: string;
+  adminKey: string;
 }
 
 /**
- * Administrative Supabase Client Factory.
- * MUST ONLY be called from server/worker environments.
- * CANNOT be imported in client-side web or Expo driver code.
+ * Node.js-compatible Admin Supabase client factory.
+ * Used directly by apps/worker or background scripts.
+ * Next.js web applications MUST consume this via apps/web/src/lib/supabase/admin.ts which enforces 'server-only'.
  */
-export function createAdminClient(config?: SupabaseAdminConfig): SupabaseClient {
-  const url = config?.supabaseUrl || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || 'http://127.0.0.1:54321';
-  const secretKey = config?.secretKey || process.env.SUPABASE_SECRET_KEY;
+export function createAdminClient(config: SupabaseAdminConfig): SupabaseClient {
+  const url = validateSupabaseUrl(config?.url);
+  const adminKey = validateAdminKey(config?.adminKey, url);
 
-  if (!secretKey) {
-    throw new Error('[Supabase Admin Client] SUPABASE_SECRET_KEY is missing from environment.');
-  }
-
-  return createSupabaseClient(url, secretKey, {
+  return createSupabaseClient(url, adminKey, {
     auth: {
-      autoRefreshToken: false,
       persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
     },
   });
 }

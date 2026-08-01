@@ -1,37 +1,53 @@
 import http from 'http';
-import { logger } from '@transport-platform/observability';
+import { createLogger } from '@transport-platform/observability';
+import { createAdminClient } from '@transport-platform/supabase/admin';
 
-const PORT = Number(process.env.PORT) || 3001;
+const logger = createLogger('worker');
 
-export function createHealthServer() {
-  return http.createServer((req, res) => {
+export function createHealthServer(): http.Server {
+  // Verify Supabase Admin Client can be instantiated in Node.js
+  const supabaseUrl = process.env.SUPABASE_URL || 'http://127.0.0.1:54321';
+  const supabaseAdminKey = process.env.SUPABASE_ADMIN_KEY || 'sb_secret_placeholder_local';
+
+  try {
+    const adminClient = createAdminClient({ url: supabaseUrl, adminKey: supabaseAdminKey });
+    if (adminClient) {
+      logger.info('Supabase Admin Client successfully initialized in worker process');
+    }
+  } catch (err) {
+    logger.warn('Supabase Admin Client initialization warning during startup', { error: String(err) });
+  }
+
+  const server = http.createServer((req, res) => {
     if (req.method === 'GET' && req.url === '/health') {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ status: 'ok', service: 'worker' }));
-    } else {
-      res.writeHead(404, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'not_found' }));
+      return;
     }
+
+    res.writeHead(404, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Not Found' }));
   });
+
+  return server;
 }
 
 if (process.env.NODE_ENV !== 'test') {
-  logger.info('Starting worker process...', { port: PORT });
-
+  const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
   const server = createHealthServer();
 
-  server.listen(PORT, () => {
-    logger.info('Worker health server listening', { port: PORT });
+  server.listen(port, () => {
+    logger.info(`Worker service running on port ${port}`);
   });
 
-  const shutdown = (signal: string) => {
-    logger.info(`Received ${signal}, shutting down gracefully...`);
+  const gracefulShutdown = (signal: string) => {
+    logger.info(`Received ${signal}. Shutting down worker gracefully...`);
     server.close(() => {
       logger.info('Worker server closed.');
       process.exit(0);
     });
   };
 
-  process.on('SIGTERM', () => shutdown('SIGTERM'));
-  process.on('SIGINT', () => shutdown('SIGINT'));
+  process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+  process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 }

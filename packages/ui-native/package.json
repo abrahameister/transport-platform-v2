@@ -26,10 +26,14 @@
     "@transport-platform/design-tokens": "workspace:*"
   },
   "devDependencies": {
+    "@transport-platform/test-utils": "workspace:*",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-native": "^0.72.8",
-    "react-native": "0.76.7",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.2",
+    "react-native-web": "^0.21.2",
     "tsup": "^8.4.0",
     "typescript": "^5.8.2",
     "vitest": "^4.0.0"

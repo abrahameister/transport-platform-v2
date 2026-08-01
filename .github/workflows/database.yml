@@ -1,4 +1,4 @@
-name: Supabase Local Database Pipeline
+name: Database Infrastructure & pgTAP Verification
 
 on:
   push:
@@ -6,40 +6,49 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  database:
+  database-infrastructure:
+    name: Supabase Local CLI & pgTAP Infrastructure Tests
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js 24
+      - name: Setup Node.js (Node 24 LTS)
         uses: actions/setup-node@v4
         with:
-          node-version: '24.14.0'
+          node-version: 24.x
 
-      - name: Enable Corepack & Install pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@11.18.0 --activate
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Install pnpm (11.18.0)
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.18.0
 
       - name: Setup Supabase CLI
-        uses: supabase/setup-cli@v1
+        uses: supabase/setup-cli@v2
         with:
-          version: '2.111.0'
+          version: 2.111.0
 
-      - name: Start Local Supabase Stack
+      - name: Start local Supabase container stack
         run: pnpm db:start
 
-      - name: Replay Migrations & Reset Database
+      - name: Reset database and replay initial migrations
         run: pnpm db:reset
 
-      - name: Run Database Tests (pgTAP Infrastructure & 0 Domain Tables Check)
+      - name: Execute pgTAP infrastructure tests
         run: pnpm db:test
 
-      - name: Stop Supabase Stack
-        if: always()
+      - name: Verify container status
+        run: pnpm db:status
+
+      - name: Stop Supabase stack
         run: pnpm db:stop
+        if: always()

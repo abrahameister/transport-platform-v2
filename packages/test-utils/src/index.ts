@@ -14,7 +14,7 @@ export interface TestBrandFixture {
   timezone: string;
 }
 
-export const brandFixtures: Record<string, TestBrandFixture> = {
+export const brandFixtures = {
   transportesAndina: {
     displayName: 'Transportes Andina',
     shortName: 'ANDINA',
@@ -60,4 +60,4 @@ export const brandFixtures: Record<string, TestBrandFixture> = {
     locale: 'es-CL',
     timezone: 'America/Santiago',
   },
-};
+} satisfies Record<string, TestBrandFixture>;

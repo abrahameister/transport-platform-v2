@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function RootPage() {
   return (
-    <div
+    <main
       style={{
         padding: '40px',
         maxWidth: '800px',
@@ -12,7 +12,9 @@ export default function RootPage() {
       }}
     >
       <h1 style={{ fontSize: '28px', marginBottom: '8px', color: '#1A1A1A' }}>Transport Platform V2</h1>
-      <p style={{ color: '#5C5C5C', marginBottom: '24px' }}>Foundation status — Productive Monorepo Base (Sprint 0)</p>
+      <p style={{ color: '#5C5C5C', marginBottom: '24px' }}>
+        Foundation status — Productive Monorepo Base (Sprint 0.1 Repair)
+      </p>
 
       <div
         style={{
@@ -35,21 +37,22 @@ export default function RootPage() {
           }}
         >
           <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ color: '#006644', fontWeight: 'bold' }}>✓</span> Web ready (Next.js 15 App Router)
+            <span style={{ color: '#006644', fontWeight: 'bold' }}>✓</span> Web configured (Next.js 15 App Router)
           </li>
           <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ color: '#006644', fontWeight: 'bold' }}>✓</span> Driver ready (Expo SDK 57)
+            <span style={{ color: '#006644', fontWeight: 'bold' }}>✓</span> Driver configured (Expo SDK 57)
           </li>
           <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ color: '#006644', fontWeight: 'bold' }}>✓</span> Worker ready (Node 24 TypeScript Process)
+            <span style={{ color: '#006644', fontWeight: 'bold' }}>✓</span> Worker configured (Node 24 TypeScript
+            Process)
           </li>
           <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ color: '#006644', fontWeight: 'bold' }}>✓</span> Supabase local ready (PostgreSQL + PostGIS,
-            0 domain tables)
+            <span style={{ color: '#006644', fontWeight: 'bold' }}>✓</span> Supabase local workflow configured
+            (PostgreSQL + PostGIS, 0 domain tables)
           </li>
           <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ color: '#006644', fontWeight: 'bold' }}>✓</span> CI ready (GitHub Actions quality, e2e &
-            database workflows)
+            <span style={{ color: '#FF9900', fontWeight: 'bold' }}>⏳</span> CI pending verification (GitHub Actions
+            quality, e2e & database workflows)
           </li>
         </ul>
       </div>
@@ -81,6 +84,6 @@ export default function RootPage() {
           </Link>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
