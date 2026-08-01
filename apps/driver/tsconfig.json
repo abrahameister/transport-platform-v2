@@ -10,5 +10,6 @@
       "@transport-platform/ui-native": ["../../packages/ui-native/src/index.tsx"],
       "@transport-platform/supabase/native": ["../../packages/supabase/src/native.ts"]
     }
-  }
+  },
+  "exclude": ["src"]
 }
