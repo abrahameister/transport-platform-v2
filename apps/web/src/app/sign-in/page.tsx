@@ -15,17 +15,19 @@ export default function SignInPage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%)',
-        padding: '20px',
+        backgroundColor: '#F8F9FA',
+        padding: '24px',
         fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       }}
     >
-      <div style={{ width: '100%', maxWidth: '520px' }}>
+      <div style={{ width: '100%', maxWidth: '480px' }}>
         <Suspense
           fallback={
-            <div style={{ textAlign: 'center', padding: '40px', color: '#FFF' }}>
+            <div style={{ textAlign: 'center', padding: '40px' }}>
               <Spinner size={32} />
-              <p style={{ marginTop: '16px', fontSize: '14px', color: '#CBD5E1' }}>Cargando portal seguro...</p>
+              <p style={{ marginTop: '16px', fontSize: '14px', color: '#4A5568', fontWeight: 600 }}>
+                Cargando portal seguro...
+              </p>
             </div>
           }
         >

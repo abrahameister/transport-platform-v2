@@ -84,6 +84,11 @@ export const Card: React.FC<{ children: ReactNode; style?: object; testID?: stri
           padding: 16,
           borderWidth: 1,
           borderColor: tokens.border.subtle,
+          shadowColor: '#1C3B57',
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: 0.05,
+          shadowRadius: 2,
+          elevation: 1,
         },
         style,
       ]}
@@ -96,41 +101,60 @@ export const Card: React.FC<{ children: ReactNode; style?: object; testID?: stri
 export const Button: React.FC<{
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'danger';
+  variant?: 'primary' | 'secondary' | 'danger' | 'brand';
   style?: object;
   testID?: string;
-}> = ({ title, onPress, variant = 'primary', style, testID }) => {
+  disabled?: boolean;
+}> = ({ title, onPress, variant = 'primary', style, testID, disabled = false }) => {
   const brand = useNativeBrand();
   const { tokens } = useNativeTheme();
 
-  let bg = brand.semanticColorAliases?.brandPrimary || tokens.surface.brand;
+  // Duet Solutions Driver Mode: Primary buttons use tactile Orange CTA (#E8832A) for immediate recognition in motion
+  let bg = tokens.surface.cta || '#E8832A';
   let textColor = tokens.text.onPrimary;
+  let borderWidth = 0;
+  let borderColor = 'transparent';
 
-  if (variant === 'secondary') {
+  if (variant === 'brand') {
+    bg = brand.semanticColorAliases?.brandPrimary || tokens.surface.brand;
+    textColor = tokens.text.onPrimary;
+  } else if (variant === 'secondary') {
     bg = tokens.surface.panel;
     textColor = tokens.text.primary;
+    borderWidth = 1;
+    borderColor = tokens.border.standard;
   } else if (variant === 'danger') {
     bg = tokens.status.danger.border;
     textColor = tokens.text.onPrimary;
+  }
+
+  if (disabled) {
+    bg = tokens.interaction.disabled || '#94A3B8';
+    textColor = '#FFFFFF';
   }
 
   return (
     <TouchableOpacity
       testID={testID}
       onPress={onPress}
+      disabled={disabled}
+      activeOpacity={0.8}
       style={[
         {
           backgroundColor: bg,
-          paddingVertical: 12,
+          paddingVertical: 14,
           paddingHorizontal: 20,
           borderRadius: 6,
           alignItems: 'center',
           justifyContent: 'center',
+          borderWidth,
+          borderColor,
+          minHeight: 48, // High touch target for Driver app
         },
         style,
       ]}
     >
-      <Text style={{ color: textColor, fontWeight: '600', fontSize: 16 }}>{title}</Text>
+      <Text style={{ color: textColor, fontWeight: '700', fontSize: 16, letterSpacing: -0.2 }}>{title}</Text>
     </TouchableOpacity>
   );
 };
@@ -142,27 +166,32 @@ export const TextField: React.FC<{
   placeholder?: string;
   error?: string;
   testID?: string;
-}> = ({ label, value, onChangeText, placeholder, error, testID }) => {
+  secureTextEntry?: boolean;
+}> = ({ label, value, onChangeText, placeholder, error, testID, secureTextEntry = false }) => {
   const { tokens } = useNativeTheme();
   return (
-    <View style={{ gap: 4, width: '100%' }}>
-      {label && <Text style={{ fontSize: 14, fontWeight: '500', color: tokens.text.primary }}>{label}</Text>}
+    <View style={{ gap: 6, width: '100%' }}>
+      {label && <Text style={{ fontSize: 14, fontWeight: '600', color: tokens.text.primary }}>{label}</Text>}
       <TextInput
         testID={testID}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
         placeholderTextColor={tokens.text.muted}
+        secureTextEntry={secureTextEntry}
         style={{
           borderWidth: 1,
           borderColor: error ? tokens.status.danger.border : tokens.border.standard,
           borderRadius: 6,
-          padding: 10,
+          paddingHorizontal: 14,
+          paddingVertical: 12,
+          minHeight: 46,
           backgroundColor: tokens.surface.panel,
           color: tokens.text.primary,
+          fontSize: 15,
         }}
       />
-      {error && <Text style={{ fontSize: 12, color: tokens.status.danger.text }}>{error}</Text>}
+      {error && <Text style={{ fontSize: 12, color: tokens.status.danger.text, fontWeight: '500' }}>{error}</Text>}
     </View>
   );
 };
@@ -181,13 +210,13 @@ export const Badge: React.FC<{
         backgroundColor: statusToken.surface,
         borderColor: statusToken.border,
         borderWidth: 1,
-        paddingVertical: 2,
-        paddingHorizontal: 8,
+        paddingVertical: 4,
+        paddingHorizontal: 10,
         borderRadius: 12,
         alignSelf: 'flex-start',
       }}
     >
-      <Text style={{ color: statusToken.text, fontSize: 12, fontWeight: '600' }}>{label}</Text>
+      <Text style={{ color: statusToken.text, fontSize: 12, fontWeight: '700' }}>{label}</Text>
     </View>
   );
 };
@@ -207,13 +236,13 @@ export const Alert: React.FC<{
         backgroundColor: statusToken.surface,
         borderLeftWidth: 4,
         borderLeftColor: statusToken.border,
-        padding: 12,
+        padding: 14,
         borderRadius: 4,
         gap: 4,
       }}
     >
-      {title && <Text style={{ color: statusToken.text, fontWeight: '700', fontSize: 14 }}>{title}</Text>}
-      <Text style={{ color: statusToken.text, fontSize: 14 }}>{message}</Text>
+      {title && <Text style={{ color: statusToken.text, fontWeight: '700', fontSize: 15 }}>{title}</Text>}
+      <Text style={{ color: statusToken.text, fontSize: 14, lineHeight: 20 }}>{message}</Text>
     </View>
   );
 };
@@ -221,16 +250,38 @@ export const Alert: React.FC<{
 export const EmptyState: React.FC<{ title: string; description?: string }> = ({ title, description }) => {
   const { tokens } = useNativeTheme();
   return (
-    <View style={{ alignItems: 'center', padding: 24, backgroundColor: tokens.surface.panel, borderRadius: 8 }}>
-      <Text style={{ fontSize: 18, fontWeight: '700', color: tokens.text.primary, marginBottom: 8 }}>{title}</Text>
-      {description && <Text style={{ fontSize: 14, color: tokens.text.secondary }}>{description}</Text>}
+    <View
+      style={{
+        alignItems: 'center',
+        padding: 32,
+        backgroundColor: tokens.surface.panel,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: tokens.border.subtle,
+      }}
+    >
+      <Text
+        style={{
+          fontSize: 17,
+          fontWeight: '700',
+          color: tokens.text.brand || tokens.text.primary,
+          marginBottom: 6,
+          textAlign: 'center',
+        }}
+      >
+        {title}
+      </Text>
+      {description && (
+        <Text style={{ fontSize: 14, color: tokens.text.secondary, textAlign: 'center', lineHeight: 20 }}>
+          {description}
+        </Text>
+      )}
     </View>
   );
 };
 
 export const LoadingIndicator: React.FC<{ size?: 'small' | 'large' }> = ({ size = 'small' }) => {
-  const brand = useNativeBrand();
   const { tokens } = useNativeTheme();
-  const brandColor = brand.semanticColorAliases?.brandPrimary || tokens.surface.brand;
-  return <ActivityIndicator size={size} color={brandColor} />;
+  const indicatorColor = tokens.surface.cta || '#E8832A';
+  return <ActivityIndicator size={size} color={indicatorColor} />;
 };

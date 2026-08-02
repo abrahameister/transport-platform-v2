@@ -104,7 +104,7 @@ export function TenantDetailManager({ tenant }: TenantDetailManagerProps) {
   return (
     <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
       <div style={{ marginBottom: '24px' }}>
-        <Link href="/platform" style={{ color: '#2563EB', textDecoration: 'none', fontSize: '14px', fontWeight: 600 }}>
+        <Link href="/platform" style={{ color: '#1C3B57', textDecoration: 'none', fontSize: '14px', fontWeight: 600 }}>
           ← Volver al listado de empresas
         </Link>
       </div>
@@ -124,7 +124,7 @@ export function TenantDetailManager({ tenant }: TenantDetailManagerProps) {
             <span style={{ fontSize: '13px', fontWeight: 700, color: '#64748B', textTransform: 'uppercase' }}>
               SLUG: {tenant.slug}
             </span>
-            <h1 style={{ margin: '6px 0', fontSize: '28px', fontWeight: 800, color: '#0F172A' }}>
+            <h1 style={{ margin: '6px 0', fontSize: '28px', fontWeight: 800, color: '#1C3B57' }}>
               {tenant.display_name}
             </h1>
             <span style={{ fontSize: '15px', color: '#475569', fontWeight: 500 }}>
@@ -187,11 +187,11 @@ export function TenantDetailManager({ tenant }: TenantDetailManagerProps) {
               style={{
                 padding: '12px 18px',
                 border: 'none',
-                backgroundColor: activeTab === tab.id ? '#EFF6FF' : 'transparent',
-                color: activeTab === tab.id ? '#2563EB' : '#64748B',
+                backgroundColor: activeTab === tab.id ? '#F0F4F8' : 'transparent',
+                color: activeTab === tab.id ? '#1C3B57' : '#64748B',
                 fontWeight: activeTab === tab.id ? 700 : 500,
                 fontSize: '15px',
-                borderBottom: activeTab === tab.id ? '3px solid #2563EB' : '3px solid transparent',
+                borderBottom: activeTab === tab.id ? '3px solid #E8832A' : '3px solid transparent',
                 cursor: 'pointer',
                 borderRadius: '8px 8px 0 0',
                 transition: 'all 0.2s',
@@ -212,10 +212,10 @@ export function TenantDetailManager({ tenant }: TenantDetailManagerProps) {
                 Parámetros Regionales
               </h3>
               <p style={{ margin: '8px 0', fontSize: '14px' }}>
-                Zona Horaria: <strong style={{ color: '#0F172A' }}>{tenant.timezone}</strong>
+                Zona Horaria: <strong style={{ color: '#1C3B57' }}>{tenant.timezone}</strong>
               </p>
               <p style={{ margin: '8px 0', fontSize: '14px' }}>
-                Locale Principal: <strong style={{ color: '#0F172A' }}>{tenant.locale}</strong>
+                Locale Principal: <strong style={{ color: '#1C3B57' }}>{tenant.locale}</strong>
               </p>
               <p style={{ margin: '8px 0', fontSize: '14px' }}>
                 ID Interno UUID:{' '}
@@ -233,10 +233,10 @@ export function TenantDetailManager({ tenant }: TenantDetailManagerProps) {
               </h3>
               <p style={{ margin: '8px 0', fontSize: '14px' }}>
                 Total Operadores (Memberships):{' '}
-                <strong style={{ color: '#0F172A' }}>{tenant.memberships.length}</strong>
+                <strong style={{ color: '#1C3B57' }}>{tenant.memberships.length}</strong>
               </p>
               <p style={{ margin: '8px 0', fontSize: '14px' }}>
-                Invitations Emitidas: <strong style={{ color: '#0F172A' }}>{tenant.invitations.length}</strong>
+                Invitations Emitidas: <strong style={{ color: '#1C3B57' }}>{tenant.invitations.length}</strong>
               </p>
               <p style={{ margin: '8px 0', fontSize: '14px' }}>
                 Creada el: <strong>{new Date(tenant.created_at).toLocaleString('es-CL')}</strong>
@@ -321,7 +321,7 @@ export function TenantDetailManager({ tenant }: TenantDetailManagerProps) {
                 }}
               >
                 <div style={{ gridColumn: 'span 3' }}>
-                  <span style={{ fontSize: '15px', fontWeight: 700, color: '#0F172A' }}>Color Primario (HSL)</span>
+                  <span style={{ fontSize: '15px', fontWeight: 700, color: '#1C3B57' }}>Color Primario (HSL)</span>
                 </div>
                 <div>
                   <label
@@ -398,10 +398,7 @@ export function TenantDetailManager({ tenant }: TenantDetailManagerProps) {
                   variant="primary"
                   style={{
                     padding: '12px 28px',
-                    backgroundColor: '#2563EB',
-                    color: '#FFF',
                     fontWeight: 600,
-                    borderRadius: '8px',
                   }}
                 >
                   {isUpdatingBranding ? 'Guardando...' : 'Guardar Configuración de Branding'}
@@ -416,17 +413,17 @@ export function TenantDetailManager({ tenant }: TenantDetailManagerProps) {
           <div>
             <div
               style={{
-                backgroundColor: '#EFF6FF',
+                backgroundColor: '#F8F9FA',
                 padding: '20px',
-                borderRadius: '10px',
-                border: '1px solid #BFDBFE',
+                borderRadius: '6px',
+                border: '1px solid #CBD5E1',
                 marginBottom: '28px',
               }}
             >
-              <h3 style={{ margin: '0 0 8px 0', fontSize: '17px', fontWeight: 700, color: '#1E3A8A' }}>
+              <h3 style={{ margin: '0 0 8px 0', fontSize: '17px', fontWeight: 700, color: '#1C3B57' }}>
                 Generación de Invitaciones de Administrador Operativo
               </h3>
-              <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: '#1E40AF', lineHeight: '1.5' }}>
+              <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: '#475569', lineHeight: '1.5' }}>
                 El token plano encriptado del enlace de invitación solo existe temporalmente durante esta respuesta del
                 servidor; <strong>jamás se almacena ni se registra en observabilidad</strong>. Genere la invitación para
                 su prueba y cópielo antes de salir.
@@ -486,7 +483,7 @@ export function TenantDetailManager({ tenant }: TenantDetailManagerProps) {
                         border: 'none',
                         fontSize: '14px',
                         fontWeight: 600,
-                        color: '#0F172A',
+                        color: '#1C3B57',
                         outline: 'none',
                         background: 'transparent',
                         fontFamily: 'monospace',
@@ -579,10 +576,7 @@ export function TenantDetailManager({ tenant }: TenantDetailManagerProps) {
                     variant="primary"
                     style={{
                       padding: '10px 24px',
-                      backgroundColor: '#2563EB',
-                      color: '#FFFFFF',
                       fontWeight: 600,
-                      borderRadius: '6px',
                       height: '42px',
                     }}
                   >
@@ -592,7 +586,7 @@ export function TenantDetailManager({ tenant }: TenantDetailManagerProps) {
               )}
             </div>
 
-            <h4 style={{ fontSize: '16px', fontWeight: 700, color: '#0F172A', marginBottom: '12px' }}>
+            <h4 style={{ fontSize: '16px', fontWeight: 700, color: '#1C3B57', marginBottom: '12px' }}>
               Historial de Invitations Registradas en BD
             </h4>
             {tenant.invitations && tenant.invitations.length > 0 ? (
@@ -618,7 +612,7 @@ export function TenantDetailManager({ tenant }: TenantDetailManagerProps) {
                 <tbody>
                   {tenant.invitations.map((inv: any) => (
                     <tr key={inv.id} style={{ borderBottom: '1px solid #F1F5F9' }}>
-                      <td style={{ padding: '12px 16px', fontWeight: 600, color: '#0F172A' }}>
+                      <td style={{ padding: '12px 16px', fontWeight: 600, color: '#1C3B57' }}>
                         {inv.normalized_email}
                       </td>
                       <td style={{ padding: '12px 16px', color: '#475569' }}>{inv.role}</td>

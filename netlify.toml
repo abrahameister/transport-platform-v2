@@ -1,0 +1,23 @@
+# Netlify Configuration for Transport Platform V2 Monorepo
+
+[build]
+  command = "pnpm --filter @transport-platform/web build"
+  publish = "apps/web/.next"
+
+[build.environment]
+  NODE_VERSION = "24.x"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[functions]
+  node_bundler = "esbuild"
+
+# Security & B2B HTTP Headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"

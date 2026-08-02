@@ -15,7 +15,8 @@ export const developmentFallbackMeta = {
 };
 
 export const OFFICIAL_FONT_FAMILY = 'Latam_Sans' as const;
-export const FONT_FALLBACK = 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' as const;
+export const FONT_FALLBACK =
+  'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Open Sans", "Helvetica Neue", sans-serif' as const;
 
 export const typography = {
   fontFamily: {
@@ -43,6 +44,7 @@ export const typography = {
 
 export const elevation = {
   officialShadow: '0px 4px 8px rgba(92,92,92,0.08)',
+  cardShadow: '0px 1px 3px rgba(28, 59, 87, 0.06), 0px 1px 2px rgba(28, 59, 87, 0.04)',
 };
 
 export const breakpoints = {
@@ -76,6 +78,7 @@ export interface SemanticTokens {
     onPrimary: string;
     onStatus: string;
     brand: string;
+    cta?: string;
   };
   surface: {
     canvas: string;
@@ -85,16 +88,20 @@ export interface SemanticTokens {
     selected: string;
     brand: string;
     brandSubtle: string;
+    cta?: string;
+    ctaSubtle?: string;
   };
   icon: {
     primary: string;
     secondary: string;
     brand: string;
+    cta?: string;
   };
   border: {
     subtle: string;
     standard: string;
     focus: string;
+    cta?: string;
   };
   status: {
     info: { surface: string; text: string; border: string };
@@ -106,50 +113,59 @@ export interface SemanticTokens {
     primaryHover: string;
     primaryActive: string;
     disabled: string;
+    ctaHover?: string;
+    ctaActive?: string;
   };
 }
 
 /**
- * Official Contract Collection: latam-b2b/light
+ * Official Contract Collection: latam-b2b/light (Duet Solutions B2B Visual System)
  * All components consume semantic tokens via ThemeProvider.
  */
 export const semanticTokens: SemanticTokens = {
   text: {
-    primary: '#1A1A1A',
-    secondary: '#5C5C5C',
-    muted: '#8C8C8C',
+    primary: '#1A2332',
+    secondary: '#4A5568',
+    muted: '#718096',
     onPrimary: '#FFFFFF',
     onStatus: '#FFFFFF',
-    brand: '#0052CC',
+    brand: '#1C3B57',
+    cta: '#E8832A',
   },
   surface: {
-    canvas: '#F4F5F7',
+    canvas: '#F8F9FA',
     panel: '#FFFFFF',
     elevated: '#FFFFFF',
-    hover: '#EBECF0',
-    selected: '#DEEBFF',
-    brand: '#0052CC',
-    brandSubtle: '#DEEBFF',
+    hover: '#F1F5F9',
+    selected: '#E2E8F0',
+    brand: '#1C3B57',
+    brandSubtle: '#F0F4F8',
+    cta: '#E8832A',
+    ctaSubtle: '#FFF5EB',
   },
   icon: {
-    primary: '#1A1A1A',
-    secondary: '#5C5C5C',
-    brand: '#0052CC',
+    primary: '#1A2332',
+    secondary: '#4A5568',
+    brand: '#1C3B57',
+    cta: '#E8832A',
   },
   border: {
-    subtle: '#E0E0E0',
-    standard: '#C1C7D0',
-    focus: '#0052CC',
+    subtle: '#E2E8F0',
+    standard: '#CBD5E1',
+    focus: '#1C3B57',
+    cta: '#E8832A',
   },
   status: {
-    info: { surface: '#DEEBFF', text: '#0747A6', border: '#4C9AFF' },
-    success: { surface: '#E3FCEF', text: '#006644', border: '#57D9A3' },
-    warning: { surface: '#FFF0B3', text: '#172B4D', border: '#FFC400' },
-    danger: { surface: '#FFEBE6', text: '#BF2600', border: '#FF8F73' },
+    info: { surface: '#EFF6FF', text: '#1E40AF', border: '#3B82F6' },
+    success: { surface: '#F0F7E6', text: '#2A4010', border: '#88A947' },
+    warning: { surface: '#FEFCE8', text: '#854D0E', border: '#EAB308' },
+    danger: { surface: '#FEF2F2', text: '#991B1B', border: '#DC2626' },
   },
   interaction: {
-    primaryHover: '#0065FF',
-    primaryActive: '#0047B3',
-    disabled: '#A5ADBA',
+    primaryHover: '#152C42',
+    primaryActive: '#0F2032',
+    disabled: '#94A3B8',
+    ctaHover: '#D6721E',
+    ctaActive: '#BF6114',
   },
 };

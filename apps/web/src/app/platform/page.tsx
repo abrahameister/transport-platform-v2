@@ -91,18 +91,18 @@ export default async function PlatformShellPage() {
   const tenants = await platformAdminService.getAllTenants();
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#F8FAFC', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
-      {/* Header Premium de Navegación */}
+    <div style={{ minHeight: '100vh', backgroundColor: '#F8F9FA', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+      {/* Header Corporativo Duet Solutions */}
       <header
         style={{
-          backgroundColor: '#0F172A',
-          color: '#F8FAFC',
+          backgroundColor: '#1C3B57',
+          color: '#FFFFFF',
           padding: '16px 32px',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-          borderBottom: '1px solid #1E293B',
+          boxShadow: '0 1px 3px rgba(28, 59, 87, 0.1)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -110,8 +110,8 @@ export default async function PlatformShellPage() {
             style={{
               width: '36px',
               height: '36px',
-              borderRadius: '8px',
-              background: 'linear-gradient(135deg, #3B82F6, #1D4ED8)',
+              borderRadius: '6px',
+              backgroundColor: '#E8832A',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -123,19 +123,19 @@ export default async function PlatformShellPage() {
             TP
           </div>
           <div>
-            <h1 style={{ margin: 0, fontSize: '18px', fontWeight: 700, letterSpacing: '-0.3px' }}>
+            <h1 style={{ margin: 0, fontSize: '18px', fontWeight: 700, letterSpacing: '-0.3px', color: '#FFFFFF' }}>
               Transport Platform V2
             </h1>
-            <span style={{ fontSize: '12px', color: '#94A3B8', fontWeight: 500 }}>Consola del Platform SuperAdmin</span>
+            <span style={{ fontSize: '12px', color: '#CBD5E1', fontWeight: 500 }}>Consola del Platform SuperAdmin</span>
           </div>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <div style={{ textAlign: 'right', fontSize: '13px', color: '#CBD5E1' }}>
+          <div style={{ textAlign: 'right', fontSize: '13px', color: '#E2E8F0' }}>
             <div>
               Conectado como: <strong>{auth.email}</strong>
             </div>
-            <div style={{ fontSize: '11px', color: '#10B981', fontWeight: 600 }}>● Sesión SuperAdmin Activa</div>
+            <div style={{ fontSize: '11px', color: '#88A947', fontWeight: 600 }}>● Sesión SuperAdmin Activa</div>
           </div>
           <LogoutButton variant="outline" />
         </div>
@@ -145,27 +145,27 @@ export default async function PlatformShellPage() {
       <main style={{ maxWidth: '1200px', margin: '40px auto', padding: '0 24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
           <div>
-            <h2 style={{ fontSize: '26px', fontWeight: 800, color: '#0F172A', margin: 0 }}>Empresas Transportistas</h2>
+            <h2 style={{ fontSize: '24px', fontWeight: 700, color: '#1C3B57', margin: 0 }}>Empresas Transportistas</h2>
             <p style={{ color: '#64748B', margin: '6px 0 0 0', fontSize: '15px' }}>
-              Administre el alta, configuración de branding, invitaciones de operadores y activación del ecosistema.
+              Administre el alta, configuración de branding, invitaciones de operadores y activation del ecosistema.
             </p>
           </div>
 
           <Link
             href="/platform/tenants/new"
             style={{
-              padding: '12px 24px',
-              backgroundColor: '#2563EB',
+              padding: '10px 20px',
+              backgroundColor: '#E8832A',
               color: '#FFFFFF',
-              borderRadius: '8px',
+              borderRadius: '6px',
               textDecoration: 'none',
               fontWeight: 600,
-              fontSize: '15px',
+              fontSize: '14px',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px',
-              boxShadow: '0 4px 10px rgba(37, 99, 235, 0.3)',
-              transition: 'background-color 0.2s',
+              boxShadow: '0 1px 2px rgba(232, 131, 42, 0.25)',
+              transition: 'opacity 0.2s',
             }}
           >
             <span>+</span> Crear Empresa
@@ -177,15 +177,15 @@ export default async function PlatformShellPage() {
           <div
             style={{
               backgroundColor: '#FFFFFF',
-              borderRadius: '12px',
+              borderRadius: '6px',
               padding: '64px 32px',
               textAlign: 'center',
               border: '1px dashed #CBD5E1',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+              boxShadow: '0 1px 3px rgba(28, 59, 87, 0.05)',
             }}
           >
             <div style={{ fontSize: '48px', marginBottom: '16px' }}>🏢</div>
-            <h3 style={{ fontSize: '18px', color: '#1E293B', fontWeight: 600, margin: '0 0 8px 0' }}>
+            <h3 style={{ fontSize: '18px', color: '#1A2332', fontWeight: 600, margin: '0 0 8px 0' }}>
               No existen empresas transportistas registradas
             </h3>
             <p style={{ color: '#64748B', fontSize: '14px', maxWidth: '400px', margin: '0 auto 24px auto' }}>
@@ -195,7 +195,7 @@ export default async function PlatformShellPage() {
               href="/platform/tenants/new"
               style={{
                 padding: '10px 20px',
-                backgroundColor: '#0F172A',
+                backgroundColor: '#E8832A',
                 color: '#FFF',
                 borderRadius: '6px',
                 textDecoration: 'none',
@@ -213,14 +213,13 @@ export default async function PlatformShellPage() {
                 key={t.id}
                 style={{
                   backgroundColor: '#FFFFFF',
-                  borderRadius: '12px',
+                  borderRadius: '6px',
                   border: '1px solid #E2E8F0',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                  boxShadow: '0px 1px 3px rgba(28, 59, 87, 0.06), 0px 1px 2px rgba(28, 59, 87, 0.04)',
                   padding: '24px',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  transition: 'transform 0.2s, box-shadow 0.2s',
                   position: 'relative',
                   overflow: 'hidden',
                 }}
@@ -247,7 +246,7 @@ export default async function PlatformShellPage() {
                     </span>
                     {getStatusBadge(t.status)}
                   </div>
-                  <h3 style={{ margin: '0 0 4px 0', fontSize: '20px', fontWeight: 700, color: '#0F172A' }}>
+                  <h3 style={{ margin: '0 0 4px 0', fontSize: '20px', fontWeight: 700, color: '#1C3B57' }}>
                     {t.display_name}
                   </h3>
                   <div style={{ fontSize: '13px', color: '#475569', fontWeight: 500 }}>
@@ -266,10 +265,10 @@ export default async function PlatformShellPage() {
                   }}
                 >
                   <div>
-                    Zona: <strong>{t.timezone}</strong>
+                    Zona: <strong style={{ color: '#1C3B57' }}>{t.timezone}</strong>
                   </div>
                   <div>
-                    Idioma: <strong>{t.locale}</strong>
+                    Idioma: <strong style={{ color: '#1C3B57' }}>{t.locale}</strong>
                   </div>
                 </div>
 
@@ -279,14 +278,13 @@ export default async function PlatformShellPage() {
                     display: 'block',
                     textAlign: 'center',
                     padding: '10px 16px',
-                    backgroundColor: '#F8FAFC',
-                    color: '#2563EB',
+                    backgroundColor: '#F8F9FA',
+                    color: '#1C3B57',
                     border: '1px solid #CBD5E1',
-                    borderRadius: '8px',
+                    borderRadius: '6px',
                     textDecoration: 'none',
                     fontWeight: 600,
                     fontSize: '14px',
-                    transition: 'all 0.2s',
                   }}
                 >
                   Gestionar Empresa & Branding →

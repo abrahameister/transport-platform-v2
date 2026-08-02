@@ -37,8 +37,7 @@ export function InviteAcceptor({ token, userEmail }: InviteAcceptorProps) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#0F172A',
-        background: 'radial-gradient(circle at center, #1E293B, #0F172A)',
+        backgroundColor: '#F8F9FA',
         padding: '20px',
       }}
     >
@@ -84,15 +83,10 @@ export function InviteAcceptor({ token, userEmail }: InviteAcceptorProps) {
                 disabled={isPending}
                 onClick={handleAccept}
                 style={{
-                  padding: '14px',
-                  fontSize: '16px',
-                  fontWeight: 700,
-                  backgroundColor: '#2563EB',
-                  color: '#FFF',
-                  borderRadius: '8px',
-                  border: 'none',
-                  boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)',
-                  cursor: isPending ? 'not-allowed' : 'pointer',
+                  padding: '12px 24px',
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  width: '100%',
                 }}
               >
                 {isPending
