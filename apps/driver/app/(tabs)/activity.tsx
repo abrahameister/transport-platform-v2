@@ -6,8 +6,8 @@ export default function ActivityScreen() {
     <Screen>
       <Card style={{ marginTop: 16 }}>
         <Alert
-          title="Historial de Actividad"
-          message="Driver foundation — flujo operacional se implementará en un sprint posterior."
+          title="Historial de Actrización"
+          message="El registro de servicios previos no se encuentra disponible actualmente para su empresa."
           variant="info"
         />
       </Card>

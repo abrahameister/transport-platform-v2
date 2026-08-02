@@ -41,11 +41,7 @@ export function SignInForm() {
       <PageHeader title="Transport Platform V2" subtitle="Ingreso Seguro al Ecosistema Productivo" />
 
       {error && (
-        <Alert
-          variant="danger"
-          title="Error de autenticación"
-          style={{ marginBottom: '16px', backgroundColor: '#FEF2F2', borderColor: '#F87171', color: '#991B1B' }}
-        >
+        <Alert variant="danger" title="Error de autenticación" style={{ marginBottom: '16px' }}>
           {error}
         </Alert>
       )}
@@ -66,13 +62,6 @@ export function SignInForm() {
             label="Correo Electrónico de Usuario"
             placeholder="ej: platform.admin.dev@example.com"
             disabled={isPending}
-            style={{
-              width: '100%',
-              padding: '10px 12px',
-              fontSize: '15px',
-              borderRadius: '6px',
-              border: '1px solid #CBD5E1',
-            }}
           />
         </div>
 
@@ -85,13 +74,6 @@ export function SignInForm() {
             label="Contraseña de Acceso"
             placeholder="••••••••••••"
             disabled={isPending}
-            style={{
-              width: '100%',
-              padding: '10px 12px',
-              fontSize: '15px',
-              borderRadius: '6px',
-              border: '1px solid #CBD5E1',
-            }}
           />
         </div>
 
@@ -100,15 +82,9 @@ export function SignInForm() {
           disabled={isPending}
           variant="primary"
           style={{
-            padding: '12px 24px',
-            fontSize: '16px',
-            fontWeight: 600,
-            borderRadius: '8px',
-            background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
-            boxShadow: '0 4px 12px rgba(37, 99, 235, 0.25)',
-            color: '#FFFFFF',
-            cursor: isPending ? 'not-allowed' : 'pointer',
-            transition: 'all 0.2s ease',
+            padding: '12px 20px',
+            fontSize: '15px',
+            width: '100%',
           }}
         >
           {isPending ? 'Verificando credenciales...' : 'Iniciar Sesión'}
@@ -116,8 +92,8 @@ export function SignInForm() {
       </form>
 
       <div style={{ marginTop: '32px', borderTop: '1px solid #E2E8F0', paddingTop: '16px', textAlign: 'center' }}>
-        <p style={{ fontSize: '12px', color: '#64748B', margin: 0 }}>
-          Protected by Supabase Security Spine & RLS Enforcement. Monolithic Modular Architecture.
+        <p style={{ fontSize: '12px', color: '#4A5568', margin: 0 }}>
+          Protected by Supabase Security Spine & RLS Enforcement. Duet Solutions Visual System.
         </p>
       </div>
     </ContentContainer>

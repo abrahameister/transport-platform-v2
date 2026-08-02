@@ -6,8 +6,8 @@ export default function TodayScreen() {
     <Screen>
       <Card style={{ marginTop: 16 }}>
         <Alert
-          title="Modo Base Conductor"
-          message="Driver foundation — flujo operacional se implementará en un sprint posterior."
+          title="Estado del Terminal"
+          message="El módulo de servicios diarios y hoja de ruta no se encuentra habilitado en su cuenta para este entorno."
           variant="info"
         />
       </Card>

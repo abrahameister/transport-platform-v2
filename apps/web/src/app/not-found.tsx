@@ -10,11 +10,11 @@ export default function NotFound() {
         fontFamily: 'system-ui, sans-serif',
       }}
     >
-      <h1 style={{ fontSize: '36px', color: '#BF2600' }}>404 — Página no encontrada</h1>
-      <p style={{ color: '#5C5C5C', marginBottom: '24px' }}>
+      <h1 style={{ fontSize: '32px', fontWeight: 700, color: '#1C3B57' }}>404 — Página no encontrada</h1>
+      <p style={{ color: '#64748B', marginBottom: '24px', fontSize: '15px' }}>
         La ruta solicitada no existe dentro de la infraestructura base.
       </p>
-      <Link href="/" style={{ color: '#0052CC', textDecoration: 'none', fontWeight: 600 }}>
+      <Link href="/" style={{ color: '#1C3B57', textDecoration: 'none', fontWeight: 600 }}>
         ← Volver al estado del sistema
       </Link>
     </div>

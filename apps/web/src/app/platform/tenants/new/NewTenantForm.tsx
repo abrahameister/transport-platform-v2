@@ -31,7 +31,7 @@ export function NewTenantForm() {
   return (
     <div style={{ maxWidth: '720px', margin: '0 auto' }}>
       <div style={{ marginBottom: '24px' }}>
-        <Link href="/platform" style={{ color: '#2563EB', textDecoration: 'none', fontSize: '14px', fontWeight: 600 }}>
+        <Link href="/platform" style={{ color: '#1C3B57', textDecoration: 'none', fontSize: '14px', fontWeight: 600 }}>
           ← Volver a Empresas Transportistas
         </Link>
       </div>
@@ -43,11 +43,7 @@ export function NewTenantForm() {
         />
 
         {error && (
-          <Alert
-            variant="danger"
-            title="Error en la creación"
-            style={{ marginBottom: '20px', backgroundColor: '#FEF2F2', borderColor: '#F87171', color: '#991B1B' }}
-          >
+          <Alert variant="danger" title="Error en la creación" style={{ marginBottom: '20px' }}>
             {error}
           </Alert>
         )}
@@ -225,11 +221,7 @@ export function NewTenantForm() {
               variant="primary"
               style={{
                 padding: '12px 28px',
-                backgroundColor: '#2563EB',
-                color: '#FFFFFF',
                 fontWeight: 600,
-                borderRadius: '8px',
-                cursor: isPending ? 'not-allowed' : 'pointer',
               }}
             >
               {isPending ? 'Creando empresa en Draft...' : 'Crear Empresa Transportista'}

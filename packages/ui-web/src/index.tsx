@@ -28,6 +28,9 @@ export const defaultBrandConfig: TenantBrandConfig = {
   supportName: 'Soporte Técnico Transport Platform',
   supportEmail: 'soporte@transportplatform.com',
   supportPhone: '+56 9 0000 0000',
+  semanticColorAliases: {
+    brandPrimary: semanticTokens.surface.brand,
+  },
   authorizedFontFamily: typography.fontFamily.fallback,
   locale: 'es-CL',
   timezone: 'America/Santiago',
@@ -67,10 +70,10 @@ export const ContentContainer: React.FC<{ children: ReactNode; className?: strin
       style={{
         maxWidth: '830px',
         margin: '0 auto',
-        padding: '24px 16px',
+        padding: '24px 20px',
         backgroundColor: tokens.surface.panel,
-        borderRadius: '8px',
-        boxShadow: elevation.officialShadow,
+        borderRadius: '6px',
+        boxShadow: elevation.cardShadow || elevation.officialShadow,
         border: `1px solid ${tokens.border.subtle}`,
       }}
     >
@@ -89,12 +92,12 @@ export const OperationalCanvas: React.FC<{ children: ReactNode; className?: stri
       className={`operational-canvas ${className}`}
       style={{
         width: '100%',
-        minHeight: 'calc(100vh - 64px)',
+        minHeight: 'calc(100vh - 60px)',
         backgroundColor: tokens.surface.canvas,
-        padding: '16px',
+        padding: '24px',
         display: 'flex',
         flexDirection: 'column',
-        gap: '16px',
+        gap: '20px',
       }}
     >
       {children}
@@ -104,7 +107,7 @@ export const OperationalCanvas: React.FC<{ children: ReactNode; className?: stri
 
 // --- BASE UI COMPONENTS ---
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'brand';
   size?: 'sm' | 'md' | 'lg';
 }
 
@@ -112,24 +115,33 @@ export const Button: React.FC<ButtonProps> = ({ variant = 'primary', size = 'md'
   const brand = useBrand();
   const { tokens } = useTheme();
 
-  let bg: string = brand.semanticColorAliases?.brandPrimary || tokens.surface.brand;
+  // Duet Solutions Rule: Primary CTA is Orange (#E8832A) for immediate visual dominance
+  let bg: string = tokens.surface.cta || '#E8832A';
   let color = tokens.text.onPrimary;
-  let border = 'none';
+  let border = '1px solid transparent';
+  let boxShadow = '0 1px 2px rgba(232, 131, 42, 0.2)';
 
-  if (variant === 'secondary') {
+  if (variant === 'brand') {
+    bg = brand.semanticColorAliases?.brandPrimary || tokens.surface.brand;
+    color = tokens.text.onPrimary;
+    boxShadow = '0 1px 2px rgba(28, 59, 87, 0.15)';
+  } else if (variant === 'secondary') {
     bg = tokens.surface.panel;
     color = tokens.text.primary;
     border = `1px solid ${tokens.border.standard}`;
+    boxShadow = '0 1px 2px rgba(0, 0, 0, 0.04)';
   } else if (variant === 'danger') {
     bg = tokens.status.danger.border;
     color = tokens.text.onPrimary;
+    boxShadow = 'none';
   } else if (variant === 'ghost') {
     bg = 'transparent';
     color = brand.semanticColorAliases?.brandPrimary || tokens.text.brand;
+    boxShadow = 'none';
   }
 
-  const padding = size === 'sm' ? '6px 12px' : size === 'lg' ? '12px 24px' : '8px 16px';
-  const fontSize = size === 'sm' ? '14px' : '16px';
+  const padding = size === 'sm' ? '6px 12px' : size === 'lg' ? '10px 20px' : '8px 16px';
+  const fontSize = size === 'sm' ? '13px' : '14px';
 
   return (
     <button
@@ -140,13 +152,16 @@ export const Button: React.FC<ButtonProps> = ({ variant = 'primary', size = 'md'
         padding,
         fontSize,
         fontFamily: brand.authorizedFontFamily || typography.fontFamily.fallback,
-        borderRadius: '6px',
+        borderRadius: '4px',
         fontWeight: 600,
-        cursor: 'pointer',
+        cursor: props.disabled ? 'not-allowed' : 'pointer',
+        opacity: props.disabled ? 0.6 : 1,
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: '8px',
+        gap: '6px',
+        boxShadow,
+        transition: 'background-color 0.15s ease, opacity 0.15s ease',
         ...style,
       }}
       {...props}
@@ -157,7 +172,7 @@ export const Button: React.FC<ButtonProps> = ({ variant = 'primary', size = 'md'
 };
 
 export const IconButton: React.FC<ButtonProps> = (props) => (
-  <Button {...props} style={{ padding: '8px', borderRadius: '50%', ...props.style }} />
+  <Button {...props} style={{ padding: '8px', borderRadius: '4px', ...props.style }} />
 );
 
 export const TextField: React.FC<React.InputHTMLAttributes<HTMLInputElement> & { label?: string; error?: string }> = ({
@@ -171,7 +186,7 @@ export const TextField: React.FC<React.InputHTMLAttributes<HTMLInputElement> & {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', width: '100%' }}>
       {label && (
-        <label htmlFor={id} style={{ fontSize: '14px', fontWeight: 500, color: tokens.text.primary }}>
+        <label htmlFor={id} style={{ fontSize: '13px', fontWeight: 600, color: tokens.text.primary }}>
           {label}
         </label>
       )}
@@ -179,15 +194,17 @@ export const TextField: React.FC<React.InputHTMLAttributes<HTMLInputElement> & {
         id={id}
         style={{
           padding: '8px 12px',
-          borderRadius: '6px',
+          borderRadius: '4px',
           border: `1px solid ${error ? tokens.status.danger.border : tokens.border.standard}`,
           fontSize: '14px',
+          backgroundColor: tokens.surface.panel,
+          color: tokens.text.primary,
           outline: 'none',
           ...style,
         }}
         {...props}
       />
-      {error && <span style={{ fontSize: '12px', color: tokens.status.danger.text }}>{error}</span>}
+      {error && <span style={{ fontSize: '12px', color: tokens.status.danger.text, fontWeight: 500 }}>{error}</span>}
     </div>
   );
 };
@@ -196,13 +213,14 @@ export const Select: React.FC<React.SelectHTMLAttributes<HTMLSelectElement> & { 
   label,
   children,
   id,
+  style,
   ...props
 }) => {
   const { tokens } = useTheme();
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', width: '100%' }}>
       {label && (
-        <label htmlFor={id} style={{ fontSize: '14px', fontWeight: 500, color: tokens.text.primary }}>
+        <label htmlFor={id} style={{ fontSize: '13px', fontWeight: 600, color: tokens.text.primary }}>
           {label}
         </label>
       )}
@@ -210,10 +228,12 @@ export const Select: React.FC<React.SelectHTMLAttributes<HTMLSelectElement> & { 
         id={id}
         style={{
           padding: '8px 12px',
-          borderRadius: '6px',
+          borderRadius: '4px',
           border: `1px solid ${tokens.border.standard}`,
           fontSize: '14px',
           backgroundColor: tokens.surface.panel,
+          color: tokens.text.primary,
+          ...style,
         }}
         {...props}
       >
@@ -228,13 +248,21 @@ export const Checkbox: React.FC<React.InputHTMLAttributes<HTMLInputElement> & { 
   id,
   ...props
 }) => {
-  const brand = useBrand();
   const { tokens } = useTheme();
-  const brandColor = brand.semanticColorAliases?.brandPrimary || tokens.surface.brand;
+  const ctaColor = tokens.surface.cta || '#E8832A';
   return (
-    <label style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '14px' }}>
-      <input id={id} type="checkbox" style={{ accentColor: brandColor }} {...props} />
-      {label && <span>{label}</span>}
+    <label
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '8px',
+        cursor: 'pointer',
+        fontSize: '14px',
+        color: tokens.text.primary,
+      }}
+    >
+      <input id={id} type="checkbox" style={{ accentColor: ctaColor }} {...props} />
+      {label && <span style={{ fontWeight: 500 }}>{label}</span>}
     </label>
   );
 };
@@ -245,15 +273,101 @@ export const Card: React.FC<{ children: ReactNode; style?: React.CSSProperties }
     <div
       style={{
         backgroundColor: tokens.surface.panel,
-        borderRadius: '8px',
-        padding: '16px',
-        boxShadow: elevation.officialShadow,
+        borderRadius: '6px',
+        padding: '20px',
+        boxShadow: elevation.cardShadow || elevation.officialShadow,
         border: `1px solid ${tokens.border.subtle}`,
         ...style,
       }}
     >
       {children}
     </div>
+  );
+};
+
+// --- HIGH-PRODUCTIVITY OPERATIONAL TABLES ---
+export const Table: React.FC<React.TableHTMLAttributes<HTMLTableElement>> = ({ children, style, ...props }) => {
+  const { tokens } = useTheme();
+  return (
+    <div
+      style={{
+        width: '100%',
+        overflowX: 'auto',
+        border: `1px solid ${tokens.border.subtle}`,
+        borderRadius: '6px',
+        backgroundColor: tokens.surface.panel,
+      }}
+    >
+      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px', ...style }} {...props}>
+        {children}
+      </table>
+    </div>
+  );
+};
+
+export const TableHead: React.FC<React.HTMLAttributes<HTMLTableSectionElement>> = ({ children, style, ...props }) => {
+  const { tokens } = useTheme();
+  return (
+    <thead
+      style={{
+        backgroundColor: tokens.surface.brandSubtle || '#F0F4F8',
+        borderBottom: `2px solid ${tokens.border.standard}`,
+        ...style,
+      }}
+      {...props}
+    >
+      {children}
+    </thead>
+  );
+};
+
+export const TableRow: React.FC<React.HTMLAttributes<HTMLTableRowElement>> = ({ children, style, ...props }) => {
+  const { tokens } = useTheme();
+  return (
+    <tr
+      style={{ borderBottom: `1px solid ${tokens.border.subtle}`, transition: 'background-color 0.1s ease', ...style }}
+      {...props}
+    >
+      {children}
+    </tr>
+  );
+};
+
+export const TableHeaderCell: React.FC<React.ThHTMLAttributes<HTMLTableCellElement>> = ({
+  children,
+  style,
+  ...props
+}) => {
+  const { tokens } = useTheme();
+  return (
+    <th
+      style={{
+        textAlign: 'left',
+        padding: '10px 14px',
+        color: tokens.text.brand || '#1C3B57',
+        fontSize: '12px',
+        fontWeight: 700,
+        textTransform: 'uppercase',
+        letterSpacing: '0.04em',
+        whiteSpace: 'nowrap',
+        ...style,
+      }}
+      {...props}
+    >
+      {children}
+    </th>
+  );
+};
+
+export const TableCell: React.FC<React.TdHTMLAttributes<HTMLTableCellElement>> = ({ children, style, ...props }) => {
+  const { tokens } = useTheme();
+  return (
+    <td
+      style={{ padding: '12px 14px', color: tokens.text.primary, fontSize: '14px', verticalAlign: 'middle', ...style }}
+      {...props}
+    >
+      {children}
+    </td>
   );
 };
 
@@ -301,7 +415,7 @@ export const Alert: React.FC<{
         ...style,
       }}
     >
-      {title && <strong style={{ display: 'block', marginBottom: '4px' }}>{title}</strong>}
+      {title && <strong style={{ display: 'block', marginBottom: '4px', fontWeight: 700 }}>{title}</strong>}
       {children}
     </div>
   );
@@ -315,9 +429,24 @@ export const EmptyState: React.FC<{ title: string; description?: string; action?
   const { tokens } = useTheme();
   return (
     <div
-      style={{ textAlign: 'center', padding: '32px 16px', backgroundColor: tokens.surface.panel, borderRadius: '8px' }}
+      style={{
+        textAlign: 'center',
+        padding: '40px 20px',
+        backgroundColor: tokens.surface.panel,
+        border: `1px dashed ${tokens.border.standard}`,
+        borderRadius: '6px',
+      }}
     >
-      <h3 style={{ margin: '0 0 8px 0', fontSize: '18px', color: tokens.text.primary }}>{title}</h3>
+      <h3
+        style={{
+          margin: '0 0 6px 0',
+          fontSize: '16px',
+          fontWeight: 700,
+          color: tokens.text.brand || tokens.text.primary,
+        }}
+      >
+        {title}
+      </h3>
       {description && (
         <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: tokens.text.secondary }}>{description}</p>
       )}
@@ -333,12 +462,31 @@ export const PageHeader: React.FC<{ title: string; subtitle?: string; actions?: 
 }) => {
   const { tokens } = useTheme();
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '20px',
+        borderBottom: `1px solid ${tokens.border.subtle}`,
+        paddingBottom: '16px',
+      }}
+    >
       <div>
-        <h1 style={{ margin: 0, fontSize: '28px', fontWeight: 700, color: tokens.text.primary }}>{title}</h1>
+        <h1
+          style={{
+            margin: 0,
+            fontSize: '24px',
+            fontWeight: 700,
+            color: tokens.text.brand || '#1C3B57',
+            letterSpacing: '-0.02em',
+          }}
+        >
+          {title}
+        </h1>
         {subtitle && <p style={{ margin: '4px 0 0 0', fontSize: '14px', color: tokens.text.secondary }}>{subtitle}</p>}
       </div>
-      {actions && <div>{actions}</div>}
+      {actions && <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>{actions}</div>}
     </div>
   );
 };
@@ -351,7 +499,8 @@ export const AppShell: React.FC<{
 }> = ({ title, brandName = 'Transport Platform V2', children, navItems = [] }) => {
   const brand = useBrand();
   const { tokens } = useTheme();
-  const brandBg = brand.semanticColorAliases?.brandPrimary || tokens.surface.brand;
+  // Duet Solutions Structural Navy Base (#1C3B57) for navigation header
+  const brandBg = brand.semanticColorAliases?.brandPrimary || tokens.surface.brand || '#1C3B57';
 
   return (
     <div
@@ -359,26 +508,28 @@ export const AppShell: React.FC<{
     >
       <header
         style={{
-          height: '56px',
+          height: '60px',
           backgroundColor: brandBg,
           color: tokens.text.onPrimary,
           display: 'flex',
           alignItems: 'center',
           padding: '0 24px',
           justifyContent: 'space-between',
+          borderBottom: '1px solid rgba(255,255,255,0.1)',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           {brand.logoUrl && <img src={brand.logoUrl} alt={brand.displayName} style={{ height: '32px' }} />}
-          <div style={{ fontWeight: 700, fontSize: '18px' }} data-testid="brand-name">
+          <div style={{ fontWeight: 700, fontSize: '18px', letterSpacing: '-0.01em' }} data-testid="brand-name">
             {brand.displayName || brandName}
           </div>
         </div>
-        <div style={{ fontSize: '14px', opacity: 0.9 }}>
+        <div style={{ fontSize: '13px', opacity: 0.9, display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span data-testid="support-info">
             {brand.supportName} ({brand.supportEmail})
-          </span>{' '}
-          — {title}
+          </span>
+          <span style={{ opacity: 0.5 }}>|</span>
+          <span style={{ fontWeight: 600, color: tokens.surface.cta || '#E8832A' }}>{title}</span>
         </div>
       </header>
       {navItems.length > 0 && (
@@ -386,16 +537,26 @@ export const AppShell: React.FC<{
           style={{
             backgroundColor: tokens.surface.panel,
             borderBottom: `1px solid ${tokens.border.subtle}`,
-            padding: '8px 24px',
+            padding: '0 24px',
             display: 'flex',
-            gap: '16px',
+            gap: '24px',
+            height: '44px',
+            alignItems: 'center',
+            boxShadow: '0 1px 2px rgba(28,59,87,0.03)',
           }}
         >
           {navItems.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              style={{ textDecoration: 'none', color: tokens.text.primary, fontSize: '14px', fontWeight: 500 }}
+              style={{
+                textDecoration: 'none',
+                color: tokens.text.brand || tokens.text.primary,
+                fontSize: '14px',
+                fontWeight: 600,
+                padding: '10px 0',
+                display: 'inline-block',
+              }}
             >
               {item.label}
             </a>
@@ -422,9 +583,8 @@ export const Skeleton: React.FC<{ width?: string; height?: string }> = ({ width 
 };
 
 export const Spinner: React.FC<{ size?: number }> = ({ size = 24 }) => {
-  const brand = useBrand();
   const { tokens } = useTheme();
-  const brandColor = brand.semanticColorAliases?.brandPrimary || tokens.surface.brand;
+  const spinnerColor = tokens.surface.cta || '#E8832A';
 
   return (
     <div
@@ -432,8 +592,9 @@ export const Spinner: React.FC<{ size?: number }> = ({ size = 24 }) => {
         width: `${size}px`,
         height: `${size}px`,
         border: `3px solid ${tokens.border.subtle}`,
-        borderTop: `3px solid ${brandColor}`,
+        borderTop: `3px solid ${spinnerColor}`,
         borderRadius: '50%',
+        animation: 'spin 0.8s linear infinite',
       }}
     />
   );

@@ -15,7 +15,7 @@ export default function OperatorLayout() {
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#2563EB" />
+        <ActivityIndicator size="large" color="#E8832A" />
         <Text style={styles.loadingText}>Verificando sesión...</Text>
       </View>
     );
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 32,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#F8F9FA',
   },
   icon: {
     fontSize: 52,
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#0F172A',
+    color: '#1C3B57',
     marginBottom: 12,
     textAlign: 'center',
   },

@@ -6,8 +6,8 @@ test.describe('Web Shells & Accessibility E2E Smoke Tests', () => {
   const publicRoutes = [
     { path: '/', titleSnippet: 'Transport Platform V2' },
     { path: '/sign-in', titleSnippet: 'Transport Platform V2' },
-    { path: '/client', titleSnippet: 'Corporate Client Shell' },
-    { path: '/passenger', titleSnippet: 'Passenger Shell' },
+    { path: '/client', titleSnippet: 'Corporate Client Portal' },
+    { path: '/passenger', titleSnippet: 'Portal del Pasajero' },
   ];
 
   for (const { path, titleSnippet } of publicRoutes) {
@@ -38,7 +38,14 @@ test.describe('Web Shells & Accessibility E2E Smoke Tests', () => {
   }
 
   // Protected routes — must redirect to sign-in when unauthenticated
-  const protectedRoutes = ['/platform', '/operator'];
+  const protectedRoutes = [
+    '/platform',
+    '/operator',
+    '/operator/employees',
+    '/operator/clients',
+    '/operator/imports',
+    '/operator/demand',
+  ];
 
   for (const path of protectedRoutes) {
     test(`Protected route "${path}" redirects unauthenticated user to /sign-in`, async ({ page }) => {

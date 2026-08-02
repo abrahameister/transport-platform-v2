@@ -6,8 +6,8 @@ export default function ProfileScreen() {
     <Screen>
       <Card style={{ marginTop: 16 }}>
         <Alert
-          title="Perfil del Conductor"
-          message="Driver foundation — flujo operacional se implementará en un sprint posterior."
+          title="Datos del Conductor"
+          message="La edición de credenciales y parámetros de licencia se gestiona exclusivamente de forma centralizada por el Administrador de Operaciones."
           variant="info"
         />
       </Card>
