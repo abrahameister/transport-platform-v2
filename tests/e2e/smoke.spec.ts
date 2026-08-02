@@ -41,10 +41,16 @@ test.describe('Web Shells & Accessibility E2E Smoke Tests', () => {
   const protectedRoutes = [
     '/platform',
     '/operator',
-    '/operator/employees',
-    '/operator/clients',
+    '/operator/servicios',
+    '/operator/planificacion',
     '/operator/imports',
+    '/operator/employees',
+    '/operator/conductores',
+    '/operator/vehiculos',
     '/operator/demand',
+    '/operator/tarifas',
+    '/operator/reportes',
+    '/operator/configuracion',
   ];
 
   for (const path of protectedRoutes) {
